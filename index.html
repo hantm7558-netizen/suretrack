@@ -19,16 +19,25 @@
         .active-tab { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* 스캐너 스타일 */
-        .bet-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 18px; margin-bottom: 12px; cursor: pointer; transition: 0.2s; }
-        .bet-card:active { transform: scale(0.97); background: #1c2128; }
-        .match-title { font-weight: 700; color: white; display: block; margin-bottom: 15px; font-size: 1rem; }
-        .profit-tag { float: right; color: var(--primary); font-family: 'JetBrains Mono', monospace; font-weight: 700; }
+        /* 스캐너 스타일 업데이트 */
+        .bet-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 18px; margin-bottom: 12px; transition: 0.2s; position: relative; }
+        
+        /* 카드 상단 헤더 영역 (수익률 + 아이콘) */
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .match-meta { font-size: 0.75rem; color: #8b949e; font-family: 'JetBrains Mono', monospace; }
+        .header-right { display: flex; align-items: center; gap: 8px; }
+        .profit-tag { color: var(--primary); font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 1rem; }
+        
+        /* [요구사항] 계산기 아이콘 스타일 */
+        .calc-trigger-icon { color: var(--accent); font-size: 1.1rem; cursor: pointer; opacity: 0.7; transition: 0.2s; padding: 5px; border-radius: 5px; }
+        .calc-trigger-icon:hover { opacity: 1; background: rgba(240, 136, 62, 0.1); transform: scale(1.1); }
+
+        .match-title { font-weight: 700; color: white; display: block; margin-bottom: 15px; font-size: 1rem; clear: both; }
         .odds-row { display: flex; gap: 8px; }
         .odd-item { flex: 1; background: #0d1117; padding: 10px; border-radius: 8px; text-align: center; border: 1px solid #21262d; }
         .o-val { color: var(--secondary); font-weight: 700; font-family: 'JetBrains Mono', monospace; }
 
-        /* 계산기 스타일 */
+        /* 계산기 스타일 그대로 유지 */
         .calc-container { background: var(--card); border-radius: 12px; padding: 20px; border: 1px solid var(--border); }
         .input-group { margin-bottom: 20px; }
         label { display: block; font-size: 0.8rem; color: #8b949e; margin-bottom: 8px; }
@@ -39,9 +48,9 @@
         .res-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 0.9rem; }
         .res-val { font-family: 'JetBrains Mono', monospace; font-weight: 700; color: var(--primary); }
 
-        /* 하단 네비게이션 */
+        /* 하단 네비게이션 그대로 유지 */
         nav { position: fixed; bottom: 0; width: 100%; background: var(--card); border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 12px 0; z-index: 1000; }
-        .nav-link { text-align: center; color: #8b949e; text-decoration: none; font-size: 0.65rem; cursor: pointer; }
+        .nav-link { text-align: center; color: #8b949e; text-decoration: none; font-size: 0.65rem; cursor: pointer; transition: 0.2s; }
         .nav-link i { display: block; font-size: 1.3rem; margin-bottom: 5px; }
         .nav-link.active { color: var(--primary); }
 
@@ -64,7 +73,7 @@
 
 <div id="tab-calc" class="tab-content">
     <div class="calc-container">
-        <h3 style="margin-top:0; color:var(--primary);">Arbitrage Calc</h3>
+        <h3 style="margin-top:0; color:var(--primary);"><i class="fa-solid fa-calculator"></i> Arbitrage Calc</h3>
         <div class="input-group">
             <label>배당률 A (Bookie 1)</label>
             <input type="number" id="odd1" step="0.01" placeholder="0.00" oninput="calculate()">
@@ -100,15 +109,24 @@
 </nav>
 
 <script>
+    // 하쿠님의 최신 GAS URL 적용
     const GAS_URL = 'https://script.google.com/macros/s/AKfycbx6yjWtdnE06qGtnW95xAtQnSyCgjYIBGBzm6n9e945tUeYPeULg71Tp_5CEImbYBAO/exec';
 
     // 탭 전환 함수
-    function switchTab(tabName) {
+    function switchTab(tabName, event) {
         document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active-tab'));
         document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
         
         document.getElementById('tab-' + tabName).classList.add('active-tab');
-        event.currentTarget.classList.add('active');
+        
+        // 메뉴 클릭 시에만 active 스타일 적용
+        if(event && event.currentTarget) {
+            event.currentTarget.classList.add('active');
+        } else {
+            // 아이콘 클릭으로 이동 시 하단 메뉴 style 맞춤
+            document.querySelector(`nav .nav-link:nth-child(2)`).classList.add('active');
+            document.querySelector(`nav .nav-link:nth-child(1)`).classList.remove('active');
+        }
         
         if(tabName === 'scanner') fetchData();
     }
@@ -124,7 +142,7 @@
         }
     }
 
-    // 스캐너 리스트 출력
+    // 스캐너 리스트 출력 업데이트
     function renderScanner(items) {
         const list = document.getElementById('scanner-list');
         list.innerHTML = '';
@@ -137,9 +155,23 @@
         items.forEach(item => {
             const card = document.createElement('div');
             card.className = 'bet-card';
-            card.onclick = () => openCalc(item['배당A'], item['배당B']);
+            
+            // UX: 아이콘 클릭을 명확히 유도하기 위해 카드 전체 클릭은 제거하거나, 아이콘 클릭과 동일하게 유지 가능.
+            // 일단 카드 전체 클릭도 유지하여 편리성을 높임.
+            card.onclick = (e) => {
+                // 아이콘 자체를 클릭했을 때만 작동하도록 하려면 아래 주석 해제
+                // if (!e.target.classList.contains('calc-trigger-icon')) return;
+                openCalc(item['배당A'], item['배당B']);
+            };
+
             card.innerHTML = `
-                <span class="profit-tag">+${item['수익률(%)']}%</span>
+                <div class="card-header">
+                    <span class="match-meta">${item['종목']}</span>
+                    <div class="header-right">
+                        <span class="profit-tag">+${item['수익률(%)']}%</span>
+                        <i class="fa-solid fa-calculator calc-trigger-icon" title="계산기로 열기"></i>
+                    </div>
+                </div>
                 <span class="match-title">${item['경기명']}</span>
                 <div class="odds-row">
                     <div class="odd-item"><span class="o-val">${item['배당A']}</span></div>
@@ -154,11 +186,11 @@
     function openCalc(o1, o2) {
         document.getElementById('odd1').value = o1;
         document.getElementById('odd2').value = o2;
-        switchTab('calc');
+        switchTab('calc'); // 'calc' 탭으로 스위칭 (event 인자 없이 호출)
         calculate();
     }
 
-    // 계산 로직
+    // 계산 로직 그대로 유지
     function calculate() {
         const o1 = parseFloat(document.getElementById('odd1').value);
         const o2 = parseFloat(document.getElementById('odd2').value);
