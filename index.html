@@ -3,35 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SureTrack v8.0 | Arbitrage Intelligence</title>
+    <title>SureTrack v8.0</title>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Noto+Sans+KR:wght@300;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --bg: #0d1117; --card: #161b22; --primary: #00ff41; --secondary: #58a6ff; --text: #c9d1d9; --accent: #f0883e; }
+        :root { --bg: #0d1117; --card: #161b22; --primary: #00ff41; --secondary: #58a6ff; --text: #c9d1d9; --accent: #f0883e; --border: #30363d; }
         body { background: var(--bg); color: var(--text); font-family: 'Noto Sans KR', sans-serif; margin: 0; padding-bottom: 90px; overflow-x: hidden; }
-        header { padding: 20px; background: var(--card); border-bottom: 1px solid #30363d; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
-        .logo { font-family: 'JetBrains Mono', monospace; font-weight: 700; color: var(--primary); font-size: 1.1rem; letter-spacing: -0.5px; }
+        header { padding: 15px 20px; background: var(--card); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
+        .logo { font-family: 'JetBrains Mono', monospace; font-weight: 700; color: var(--primary); font-size: 1.1rem; }
         .live-dot { height: 8px; width: 8px; background: var(--primary); border-radius: 50%; display: inline-block; margin-right: 5px; animation: blink 1.5s infinite; }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
-        
-        #scanner-list { padding: 15px; }
-        .bet-card { background: var(--card); border: 1px solid #30363d; border-radius: 12px; padding: 18px; margin-bottom: 12px; position: relative; }
-        .profit-tag { position: absolute; top: 15px; right: 15px; color: var(--primary); font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 1.1rem; }
-        .match-info { font-size: 0.9rem; font-weight: 500; margin-bottom: 15px; display: block; color: #8b949e; }
-        .match-title { font-size: 1rem; font-weight: 700; margin-bottom: 15px; display: block; color: white; width: 80%; }
-        
-        .odds-row { display: flex; gap: 10px; }
-        .odd-item { flex: 1; background: #0d1117; padding: 12px; border-radius: 8px; border: 1px solid #21262d; text-align: center; }
-        .b-name { font-size: 0.7rem; color: #8b949e; display: block; margin-bottom: 4px; }
-        .o-val { font-family: 'JetBrains Mono', monospace; font-size: 1.1rem; color: var(--secondary); font-weight: 700; }
 
-        .ad-strip { background: linear-gradient(90deg, #1e252e, #161b22); border: 1px dashed var(--accent); border-radius: 12px; padding: 15px; margin-bottom: 12px; display: flex; align-items: center; cursor: pointer; }
-        .ad-strip i { font-size: 1.5rem; color: var(--accent); margin-right: 15px; }
-        .ad-content b { color: var(--accent); font-size: 0.9rem; }
-        .ad-content p { font-size: 0.8rem; margin: 4px 0 0 0; color: #8b949e; }
+        /* 탭 전환 로직 */
+        .tab-content { display: none; padding: 15px; animation: fadeIn 0.3s ease; }
+        .active-tab { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        nav { position: fixed; bottom: 0; width: 100%; background: var(--card); border-top: 1px solid #30363d; display: flex; justify-content: space-around; padding: 12px 0; z-index: 1000; }
-        .nav-link { text-align: center; color: #8b949e; text-decoration: none; font-size: 0.65rem; transition: 0.2s; }
+        /* 스캐너 스타일 */
+        .bet-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 18px; margin-bottom: 12px; cursor: pointer; transition: 0.2s; }
+        .bet-card:active { transform: scale(0.97); background: #1c2128; }
+        .match-title { font-weight: 700; color: white; display: block; margin-bottom: 15px; font-size: 1rem; }
+        .profit-tag { float: right; color: var(--primary); font-family: 'JetBrains Mono', monospace; font-weight: 700; }
+        .odds-row { display: flex; gap: 8px; }
+        .odd-item { flex: 1; background: #0d1117; padding: 10px; border-radius: 8px; text-align: center; border: 1px solid #21262d; }
+        .o-val { color: var(--secondary); font-weight: 700; font-family: 'JetBrains Mono', monospace; }
+
+        /* 계산기 스타일 */
+        .calc-container { background: var(--card); border-radius: 12px; padding: 20px; border: 1px solid var(--border); }
+        .input-group { margin-bottom: 20px; }
+        label { display: block; font-size: 0.8rem; color: #8b949e; margin-bottom: 8px; }
+        input { width: 100%; background: #0d1117; border: 1px solid var(--border); border-radius: 8px; padding: 12px; color: white; font-family: 'JetBrains Mono', monospace; font-size: 1.1rem; box-sizing: border-box; }
+        input:focus { border-color: var(--primary); outline: none; }
+        
+        .result-box { background: rgba(0, 255, 65, 0.05); border: 1px solid rgba(0, 255, 65, 0.2); border-radius: 12px; padding: 15px; margin-top: 20px; }
+        .res-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 0.9rem; }
+        .res-val { font-family: 'JetBrains Mono', monospace; font-weight: 700; color: var(--primary); }
+
+        /* 하단 네비게이션 */
+        nav { position: fixed; bottom: 0; width: 100%; background: var(--card); border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 12px 0; z-index: 1000; }
+        .nav-link { text-align: center; color: #8b949e; text-decoration: none; font-size: 0.65rem; cursor: pointer; }
         .nav-link i { display: block; font-size: 1.3rem; margin-bottom: 5px; }
         .nav-link.active { color: var(--primary); }
 
@@ -43,39 +53,79 @@
 
 <header>
     <div class="logo">SureTrack v8.0</div>
-    <div style="font-size: 0.75rem; color: #8b949e;"><span class="live-dot"></span>SCANNING...</div>
+    <div id="status-text" style="font-size: 0.75rem; color: #8b949e;"><span class="live-dot"></span>SCANNING</div>
 </header>
 
-<div id="scanner-list">
-    <div class="loading"><i class="fas fa-circle-notch fa-spin"></i> 데이터를 동기화 중입니다...</div>
+<div id="tab-scanner" class="tab-content active-tab">
+    <div id="scanner-list">
+        <div class="loading"><i class="fas fa-circle-notch fa-spin"></i> 데이터 동기화 중...</div>
+    </div>
+</div>
+
+<div id="tab-calc" class="tab-content">
+    <div class="calc-container">
+        <h3 style="margin-top:0; color:var(--primary);">Arbitrage Calc</h3>
+        <div class="input-group">
+            <label>배당률 A (Bookie 1)</label>
+            <input type="number" id="odd1" step="0.01" placeholder="0.00" oninput="calculate()">
+        </div>
+        <div class="input-group">
+            <label>배당률 B (Bookie 2)</label>
+            <input type="number" id="odd2" step="0.01" placeholder="0.00" oninput="calculate()">
+        </div>
+        <div class="input-group">
+            <label>총 투자 금액 (Seed Money)</label>
+            <input type="number" id="total-invest" value="1000000" oninput="calculate()">
+        </div>
+
+        <div class="result-box">
+            <div class="res-row"><span>Bookie A 배팅액:</span> <span id="res-bet1" class="res-val">0</span></div>
+            <div class="res-row"><span>Bookie B 배팅액:</span> <span id="res-bet2" class="res-val">0</span></div>
+            <hr style="border:0; border-top:1px solid var(--border); margin:10px 0;">
+            <div class="res-row" style="font-size:1.1rem;"><span>확정 수익:</span> <span id="res-profit" class="res-val" style="color:var(--primary);">0</span></div>
+            <div class="res-row"><span>수익률:</span> <span id="res-percent" class="res-val">0%</span></div>
+        </div>
+    </div>
 </div>
 
 <div class="v-footer">
-    [통계] v8.0 SureTrack Golden Master | AI Arbitrage Intelligence System
+    v8.0 SureTrack Golden Master | AI Arbitrage Intelligence System
 </div>
 
 <nav>
-    <a href="#" class="nav-link active"><i class="fa-solid fa-bolt"></i>SCANNER</a>
-    <a href="#" class="nav-link"><i class="fa-solid fa-calculator"></i>CALC</a>
-    <a href="#" class="nav-link"><i class="fa-solid fa-layer-group"></i>PORTFOLIO</a>
-    <a href="#" class="nav-link"><i class="fa-solid fa-award"></i>PREMIUM</a>
-    <a href="#" class="nav-link"><i class="fa-solid fa-chart-pie"></i>STATS</a>
+    <div class="nav-link active" onclick="switchTab('scanner')"><i class="fa-solid fa-bolt"></i>SCANNER</div>
+    <div class="nav-link" onclick="switchTab('calc')"><i class="fa-solid fa-calculator"></i>CALC</div>
+    <div class="nav-link"><i class="fa-solid fa-layer-group"></i>HISTORY</div>
+    <div class="nav-link"><i class="fa-solid fa-chart-pie"></i>STATS</div>
 </nav>
 
 <script>
     const GAS_URL = 'https://script.google.com/macros/s/AKfycbx6yjWtdnE06qGtnW95xAtQnSyCgjYIBGBzm6n9e945tUeYPeULg71Tp_5CEImbYBAO/exec';
 
+    // 탭 전환 함수
+    function switchTab(tabName) {
+        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active-tab'));
+        document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
+        
+        document.getElementById('tab-' + tabName).classList.add('active-tab');
+        event.currentTarget.classList.add('active');
+        
+        if(tabName === 'scanner') fetchData();
+    }
+
+    // 데이터 가져오기
     async function fetchData() {
         try {
             const response = await fetch(GAS_URL);
             const data = await response.json();
-            renderUI(data);
+            renderScanner(data);
         } catch (e) {
-            document.getElementById('scanner-list').innerHTML = `<div class="loading">연결 실패: GAS 배포 설정을 확인하세요.</div>`;
+            document.getElementById('scanner-list').innerHTML = `<div class="loading">연결 실패: GAS 설정을 확인하세요.</div>`;
         }
     }
 
-    function renderUI(items) {
+    // 스캐너 리스트 출력
+    function renderScanner(items) {
         const list = document.getElementById('scanner-list');
         list.innerHTML = '';
 
@@ -84,44 +134,53 @@
             return;
         }
 
-        items.forEach((item, i) => {
-            // 3번째 카드마다 광고 삽입 로직
-            if (i > 0 && i % 3 === 0) {
-                list.innerHTML += `
-                    <div class="ad-strip" onclick="window.open('https://www.pinnacle.com', '_blank')">
-                        <i class="fa-solid fa-bullhorn"></i>
-                        <div class="ad-content">
-                            <b>Pinnacle Official Partner</b>
-                            <p>전 세계 1위 배당률, 지금 바로 가입하고 혜택받기</p>
-                        </div>
-                    </div>
-                `;
-            }
-
-            const card = `
-                <div class="bet-card">
-                    <div class="profit-tag">+${item['수익률(%)']}</div>
-                    <span class="match-info">${item['종목']} | ${new Date(item['시작시간']).toLocaleString('ko-KR', {hour: '2-digit', minute:'2-digit'})}</span>
-                    <span class="match-title">${item['경기명']}</span>
-                    <div class="odds-row">
-                        <div class="odd-item">
-                            <span class="b-name">${item['북마커A']}</span>
-                            <span class="o-val">${item['배당A']}</span>
-                        </div>
-                        <div class="odd-item">
-                            <span class="b-name">${item['북마커B']}</span>
-                            <span class="o-val">${item['배당B']}</span>
-                        </div>
-                    </div>
+        items.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'bet-card';
+            card.onclick = () => openCalc(item['배당A'], item['배당B']);
+            card.innerHTML = `
+                <span class="profit-tag">+${item['수익률(%)']}%</span>
+                <span class="match-title">${item['경기명']}</span>
+                <div class="odds-row">
+                    <div class="odd-item"><span class="o-val">${item['배당A']}</span></div>
+                    <div class="odd-item"><span class="o-val">${item['배당B']}</span></div>
                 </div>
             `;
-            list.innerHTML += card;
+            list.appendChild(card);
         });
     }
 
-    fetchData();
-    setInterval(fetchData, 60000); // 1분마다 리스트 갱신
-</script>
+    // 계산기로 이동 및 자동 세팅
+    function openCalc(o1, o2) {
+        document.getElementById('odd1').value = o1;
+        document.getElementById('odd2').value = o2;
+        switchTab('calc');
+        calculate();
+    }
 
+    // 계산 로직
+    function calculate() {
+        const o1 = parseFloat(document.getElementById('odd1').value);
+        const o2 = parseFloat(document.getElementById('odd2').value);
+        const total = parseFloat(document.getElementById('total-invest').value);
+
+        if (!o1 || !o2 || !total) return;
+
+        const arbPercent = (1/o1) + (1/o2);
+        const bet1 = (total * (1/o1)) / arbPercent;
+        const bet2 = total - bet1;
+        const profit = (total / arbPercent) - total;
+        const profitRate = (1/arbPercent - 1) * 100;
+
+        document.getElementById('res-bet1').innerText = Math.floor(bet1).toLocaleString() + "원";
+        document.getElementById('res-bet2').innerText = Math.floor(bet2).toLocaleString() + "원";
+        document.getElementById('res-profit').innerText = "+" + Math.floor(profit).toLocaleString() + "원";
+        document.getElementById('res-percent').innerText = profitRate.toFixed(2) + "%";
+    }
+
+    // 초기 실행
+    fetchData();
+    setInterval(fetchData, 60000);
+</script>
 </body>
 </html>
