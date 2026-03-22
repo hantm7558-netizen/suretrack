@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SureTrack v8.6 Golden Master</title>
+    <title>SureTrack v8.8 Golden Master</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@700&family=Noto+Sans+KR:wght@500;700&display=swap" rel="stylesheet">
     <style>
@@ -11,7 +11,7 @@
         
         body { background: var(--bg); color: var(--text); font-family: 'Noto Sans KR', sans-serif; margin: 0; padding-bottom: 90px; overflow-x: hidden; -webkit-tap-highlight-color: transparent; }
 
-        /* [v8.5.1] 헤더 및 깜빡이는 도트 */
+        /* [v8.5.1 고정] 헤더 및 깜빡이는 도트 */
         header { padding: 15px 16px; background: var(--card); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
         .logo { font-family: 'JetBrains Mono', monospace; font-weight: 700; color: var(--primary); font-size: 1.1rem; }
         .status-container { display: flex; align-items: center; font-size: 0.75rem; color: #8b949e; font-family: 'JetBrains Mono'; font-weight: 700; }
@@ -30,31 +30,44 @@
         .active-tab { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* [v8.5.1] 좌우 꽉 찬 카드 UI */
+        /* [v8.5.1 고정] 좌우 꽉 찬 카드 UI */
         .bet-card { 
             background: var(--card); border: 1px solid var(--border); border-radius: 12px; 
             padding: 18px; margin: 0 10px 12px 10px; position: relative; 
             border-left: 5px solid var(--primary); box-sizing: border-box;
         }
         
-        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-        .market-badge { font-size: 0.65rem; background: rgba(88, 166, 255, 0.1); padding: 3px 8px; border-radius: 4px; color: var(--secondary); font-weight: 700; border: 1px solid rgba(88, 166, 255, 0.2); }
+        .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
         
+        /* [v8.7 고정] 마켓 배지 & 시간 세로 배치 */
+        .header-left { display: flex; flex-direction: column; gap: 6px; }
+        .market-badge { width: fit-content; font-size: 0.65rem; background: rgba(88, 166, 255, 0.1); padding: 3px 8px; border-radius: 4px; color: var(--secondary); font-weight: 700; border: 1px solid rgba(88, 166, 255, 0.2); }
+        .match-time { font-size: 0.7rem; color: #8b949e; font-family: 'JetBrains Mono'; font-weight: 400; }
+
         .header-right { display: flex; align-items: center; gap: 8px; }
         .profit-tag { color: var(--primary); font-family: 'JetBrains Mono'; font-weight: 700; font-size: 1.15rem; }
         .calc-icon-inline { color: var(--accent); cursor: pointer; font-size: 1.2rem; transition: 0.2s; }
 
-        /* [요구사항] 팀명 & 시간 배치 최적화 */
-        .match-title { display: block; margin: 12px 0 2px 0; font-weight: 700; color: white; font-size: 1.05rem; line-height: 1.4; }
-        .match-time { font-size: 0.72rem; color: #8b949e; display: block; margin-bottom: 12px; font-family: 'JetBrains Mono'; font-weight: 400; }
+        .match-title { display: block; margin: 0 0 15px 0; font-weight: 700; color: white; font-size: 1.05rem; line-height: 1.4; }
 
-        .odds-row { display: grid; gap: 8px; margin-top: 10px; }
+        /* 가변 그리드 시스템 유지 */
+        .odds-row { display: grid; gap: 8px; }
         .grid-2 { grid-template-columns: 1fr 1fr; }
         .grid-3 { grid-template-columns: 1fr 1fr 1fr; }
         
-        .odd-item { background: #0d1117; padding: 14px 4px; border-radius: 10px; text-align: center; border: 1px solid #21262d; }
-        .o-target { display: block; font-size: 0.7rem; color: #8b949e; margin-bottom: 6px; }
-        .o-val { color: var(--primary); font-weight: 700; font-family: 'JetBrains Mono'; font-size: 1.1rem; }
+        .odd-item { background: #0d1117; padding: 14px 4px; border-radius: 10px; text-align: center; border: 1px solid #21262d; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .o-target { display: block; font-size: 0.7rem; color: #8b949e; margin-bottom: 4px; width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .o-val { color: var(--primary); font-weight: 700; font-family: 'JetBrains Mono'; font-size: 1.1rem; margin-bottom: 8px; }
+
+        /* [v8.8 신규] 북마커 로고 스타일 */
+        .bookie-logo { 
+            height: 14px; 
+            max-width: 80%; 
+            object-fit: contain; 
+            filter: grayscale(1) brightness(1.5); /* 디자인 통일감을 위해 회색톤 처리 */
+            opacity: 0.7;
+            margin-top: 2px;
+        }
 
         /* STATS & CALC 유지 */
         .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 0 10px; }
@@ -73,7 +86,7 @@
 <body>
 
 <header>
-    <div class="logo">SureTrack v8.6</div>
+    <div class="logo">SureTrack v8.8</div>
     <div class="status-container"><span class="live-status-dot"></span>SCANNING LIVE</div>
 </header>
 
@@ -103,11 +116,33 @@
     <div class="nav-link" onclick="go('stats', event)"><i class="fa-solid fa-chart-pie"></i>STATS</div>
 </nav>
 
-<div class="v-footer">v8.6 SureTrack Golden Master | AI Intelligence</div>
+<div class="v-footer">v8.8 SureTrack Golden Master | AI Intelligence</div>
 
 <script>
-    // 하쿠님의 기존 GAS URL을 꼭 여기에 넣어주세요
     const URL = 'https://script.google.com/macros/s/AKfycbx6yjWtdnE06qGtnW95xAtQnSyCgjYIBGBzm6n9e945tUeYPeULg71Tp_5CEImbYBAO/exec';
+
+    // [v8.8 신규] 북마커 이름으로 로고 URL 생성하는 헬퍼 함수
+    function getBookieLogo(name) {
+        if (!name) return "";
+        const cleanName = name.toLowerCase().replace(/\s+/g, '');
+        // 로고 서비스(Clearbit 등)를 이용하여 도메인 기반 로고 자동 생성
+        // 주요 사이트들은 도메인 매핑, 그 외는 텍스트 대체 가능
+        const domains = {
+            'pinnacle': 'pinnacle.com',
+            'bet365': 'bet365.com',
+            'williamhill': 'williamhill.com',
+            '1xbet': '1xbet.com',
+            'marathonbet': 'marathonbet.com',
+            'unibet': 'unibet.com',
+            'betfair': 'betfair.com',
+            'matchbook': 'matchbook.com',
+            'coolbet': 'coolbet.com',
+            'betsson': 'betsson.com',
+            '888sport': '888sport.com'
+        };
+        const domain = domains[cleanName] || `${cleanName}.com`;
+        return `https://logo.clearbit.com/${domain}?size=64`;
+    }
 
     function go(t, e) {
         document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active-tab'));
@@ -120,12 +155,7 @@
         try {
             const res = await fetch(URL);
             const rawData = await res.json();
-            
-            // [v8.6 수정] 시간순 정렬 로직 (안전한 Date 파싱 적용)
-            const sortedData = rawData.sort((a, b) => {
-                return new Date(a['시작시간']) - new Date(b['시작시간']);
-            });
-
+            const sortedData = rawData.sort((a, b) => new Date(a['시작시간']) - new Date(b['시작시간']));
             render(sortedData);
             updateStats(sortedData);
         } catch (e) { console.error("Data Load Error", e); }
@@ -140,7 +170,6 @@
             const card = document.createElement('div');
             card.className = 'bet-card';
             
-            // 시간 포맷팅 (월/일 시:분)
             let displayTime = "시간 정보 없음";
             if(item['시작시간']) {
                 const date = new Date(item['시작시간']);
@@ -149,18 +178,33 @@
 
             card.innerHTML = `
                 <div class="card-header">
-                    <span class="market-badge">${item['마켓타입'] === 'H2H' ? '1X2 (승무패)' : 'TOTAL (언오바)'}</span>
+                    <div class="header-left">
+                        <span class="market-badge">${item['마켓타입'] === 'H2H' ? '1X2 (승무패)' : 'TOTAL (언오바)'}</span>
+                        <span class="match-time">${displayTime} (UTC+9)</span>
+                    </div>
                     <div class="header-right">
                         <span class="profit-tag">+${item['수익률(%)']}%</span>
                         <i class="fa-solid fa-calculator calc-icon-inline" onclick="event.stopPropagation(); openCalc('${item['배당A']}', '${item['배당B']}', '${item['배당C']}')"></i>
                     </div>
                 </div>
                 <span class="match-title">${item['경기명']}</span>
-                <span class="match-time"><i class="fa-regular fa-clock" style="font-size:0.65rem;"></i> ${displayTime}</span>
                 <div class="odds-row ${is3Way ? 'grid-3' : 'grid-2'}">
-                    <div class="odd-item"><span class="o-target">${item['타겟A']}</span><span class="o-val">${parseFloat(item['배당A']).toFixed(2)}</span></div>
-                    ${is3Way ? `<div class="odd-item"><span class="o-target">무승부</span><span class="o-val" style="color:var(--accent)">${parseFloat(item['배당B']).toFixed(2)}</span></div>` : ''}
-                    <div class="odd-item"><span class="o-target">${is3Way ? item['타겟C'] : item['타겟B']}</span><span class="o-val">${is3Way ? parseFloat(item['배당C']).toFixed(2) : parseFloat(item['배당B']).toFixed(2)}</span></div>
+                    <div class="odd-item">
+                        <span class="o-target">${item['타겟A']}</span>
+                        <span class="o-val">${parseFloat(item['배당A']).toFixed(2)}</span>
+                        <img class="bookie-logo" src="${getBookieLogo(item['북A'])}" onerror="this.src='https://via.placeholder.com/60x15/161b22/8b949e?text=${item['북A']}'" alt="${item['북A']}">
+                    </div>
+                    ${is3Way ? `
+                        <div class="odd-item">
+                            <span class="o-target">무승부</span>
+                            <span class="o-val" style="color:var(--accent)">${parseFloat(item['배당B']).toFixed(2)}</span>
+                            <img class="bookie-logo" src="${getBookieLogo(item['북B'])}" onerror="this.src='https://via.placeholder.com/60x15/161b22/8b949e?text=${item['북B']}'" alt="${item['북B']}">
+                        </div>` : ''}
+                    <div class="odd-item">
+                        <span class="o-target">${is3Way ? item['타겟C'] : item['타겟B']}</span>
+                        <span class="o-val">${is3Way ? parseFloat(item['배당C']).toFixed(2) : parseFloat(item['배당B']).toFixed(2)}</span>
+                        <img class="bookie-logo" src="${getBookieLogo(is3Way ? item['북C'] : item['북B'])}" onerror="this.src='https://via.placeholder.com/60x15/161b22/8b949e?text=${is3Way ? item['북C'] : item['북B']}'" alt="${is3Way ? item['북C'] : item['북B']}">
+                    </div>
                 </div>
             `;
             card.onclick = () => openCalc(item['배당A'], item['배당B'], item['배당C']);
@@ -168,7 +212,6 @@
         });
     }
 
-    // 통계 및 계산기 로직 (골든 마스터 고정)
     function updateStats(data) {
         if(!data || data.length === 0) return;
         const count = data.length;
