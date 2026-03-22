@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SureTrack v8.9 Golden Master</title>
+    <title>SureTrack v9.0 Golden Master</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@700&family=Noto+Sans+KR:wght@500;700&display=swap" rel="stylesheet">
     <style>
@@ -56,19 +56,19 @@
         .o-target { display: block; font-size: 0.65rem; color: #8b949e; margin-bottom: 4px; width: 90%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .o-val { color: var(--primary); font-weight: 700; font-family: 'JetBrains Mono'; font-size: 1.1rem; margin-bottom: 8px; }
 
-        /* [v8.9 신규] 로고 & 이니셜 배지 시스템 */
-        .bookie-container {
-            width: 24px; height: 24px;
+        /* [v9.0] 금융 스타일 '스마트 배지' 로직 */
+        .bookie-badge {
+            width: 26px; height: 26px; border-radius: 6px;
             display: flex; align-items: center; justify-content: center;
-            border-radius: 6px; background: #1c2128; overflow: hidden;
+            font-family: 'JetBrains Mono'; font-size: 0.6rem; font-weight: 800;
+            color: white; text-transform: uppercase;
+            position: relative; overflow: hidden;
+            background: #21262d; /* 기본 배경 */
         }
         .bookie-logo { 
-            width: 100%; height: 100%; object-fit: contain; 
-            filter: grayscale(1) brightness(1.3);
-        }
-        .bookie-initial {
-            font-size: 0.6rem; font-weight: 700; color: var(--secondary);
-            text-transform: uppercase; font-family: 'JetBrains Mono';
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            object-fit: contain; background: white;
+            display: none; /* 로드 전까지 숨김 */
         }
 
         /* STATS & CALC */
@@ -88,7 +88,7 @@
 <body>
 
 <header>
-    <div class="logo">SureTrack v8.9</div>
+    <div class="logo">SureTrack v9.0</div>
     <div class="status-container"><span class="live-status-dot"></span>SCANNING LIVE</div>
 </header>
 
@@ -118,14 +118,14 @@
     <div class="nav-link" onclick="go('stats', event)"><i class="fa-solid fa-chart-pie"></i>STATS</div>
 </nav>
 
-<div class="v-footer">v8.9 SureTrack Golden Master | AI Intelligence</div>
+<div class="v-footer">v9.0 SureTrack Golden Master | AI Intelligence</div>
 
 <script>
     const URL = 'https://script.google.com/macros/s/AKfycbx6yjWtdnE06qGtnW95xAtQnSyCgjYIBGBzm6n9e945tUeYPeULg71Tp_5CEImbYBAO/exec';
 
-    // [v8.9 신규] 절대 깨지지 않는 로고 & 배지 로직
+    // [v9.0] 실패 없는 스마트 배지 생성기
     function getBookieElement(name) {
-        if (!name) return '<div class="bookie-container"></div>';
+        if (!name) return '<div class="bookie-badge">?</div>';
         
         const domains = {
             'pinnacle': 'pinnacle.com', 'bet365': 'bet365.com', 'williamhill': 'williamhill.com',
@@ -137,15 +137,18 @@
         const cleanName = name.toLowerCase().replace(/\s+/g, '');
         const domain = domains[cleanName] || `${cleanName}.com`;
         const initials = name.substring(0, 2);
+        
+        // 이름 길이에 따른 다채로운 색상 할당
+        const colors = ['#58a6ff', '#00ff41', '#f0883e', '#ff4136', '#ff41b4', '#795548'];
+        const bgColor = colors[name.length % colors.length];
 
-        // 이미지 로딩 실패 시 텍스트 배지로 전환되는 구조
         return `
-            <div class="bookie-container">
+            <div class="bookie-badge" style="background:${bgColor}">
+                ${initials}
                 <img class="bookie-logo" 
-                     src="https://www.google.com/s2/favicons?sz=64&domain=${domain}" 
-                     onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" 
-                     alt="${name}">
-                <span class="bookie-initial" style="display:none;">${initials}</span>
+                     src="https://icon.horse/icon/${domain}" 
+                     onload="this.style.display='block'" 
+                     alt="">
             </div>
         `;
     }
