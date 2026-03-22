@@ -3,56 +3,81 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SureTrack v8.5</title>
+    <title>SureTrack v8.5.1</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Noto+Sans+KR:wght@300;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@700&family=Noto+Sans+KR:wght@500;700&display=swap" rel="stylesheet">
     <style>
         :root { --bg: #0d1117; --card: #161b22; --primary: #00ff41; --secondary: #58a6ff; --text: #c9d1d9; --border: #30363d; --accent: #f0883e; --danger: #ff4136; }
         
-        body { background: var(--bg); color: var(--text); font-family: 'Noto Sans KR', sans-serif; margin: 0; padding-bottom: 90px; overflow-x: hidden; }
+        body { background: var(--bg); color: var(--text); font-family: 'Noto Sans KR', sans-serif; margin: 0; padding-bottom: 90px; overflow-x: hidden; -webkit-tap-highlight-color: transparent; }
 
         header { padding: 15px 16px; background: var(--card); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
         .logo { font-family: 'JetBrains Mono', monospace; font-weight: 700; color: var(--primary); font-size: 1.1rem; }
+        
         .status-container { display: flex; align-items: center; font-size: 0.75rem; color: #8b949e; font-family: 'JetBrains Mono'; font-weight: 700; }
         
-        /* [v8.4 고정] 초록/빨강 교차 깜빡이 */
-        .live-status-dot { height: 10px; width: 10px; border-radius: 50%; display: inline-block; margin-right: 8px; animation: blinking-dot 1.2s infinite alternate; }
-        @keyframes blinking-dot { 0% { background-color: var(--primary); box-shadow: 0 0 8px var(--primary); } 100% { background-color: var(--danger); box-shadow: 0 0 8px var(--danger); } }
+        /* [요구사항] 초록/빨강 실시간 교차 깜빡이 */
+        .live-status-dot {
+            height: 10px;
+            width: 10px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 8px;
+            animation: pulse-exchange 1.2s infinite ease-in-out;
+        }
+        @keyframes pulse-exchange {
+            0% { background-color: var(--primary); box-shadow: 0 0 8px var(--primary); }
+            50% { background-color: var(--danger); box-shadow: 0 0 8px var(--danger); }
+            100% { background-color: var(--primary); box-shadow: 0 0 8px var(--primary); }
+        }
 
         .tab-content { display: none; padding: 12px 0; animation: fadeIn 0.3s ease; }
         .active-tab { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* [v8.4 고정] 꽉 찬 카드 레이아웃 */
-        .bet-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 18px; margin: 0 10px 12px 10px; position: relative; border-left: 4px solid var(--primary); box-sizing: border-box; }
-        .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+        /* [요구사항] 좌우 너비 꽉 채운 카드 UI */
+        .bet-card { 
+            background: var(--card); 
+            border: 1px solid var(--border); 
+            border-radius: 12px; 
+            padding: 18px; 
+            margin: 0 10px 12px 10px; 
+            position: relative; 
+            border-left: 5px solid var(--primary);
+            box-sizing: border-box;
+        }
+        
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
         .market-badge { font-size: 0.65rem; background: rgba(88, 166, 255, 0.1); padding: 3px 8px; border-radius: 4px; color: var(--secondary); font-weight: 700; border: 1px solid rgba(88, 166, 255, 0.2); }
-        .profit-tag { color: var(--primary); font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 1.1rem; }
-        .calc-icon-inline { color: var(--accent); cursor: pointer; font-size: 1.1rem; transition: 0.2s; padding: 2px; }
+        
+        /* [요구사항] 수익률 옆 계산기 아이콘 배치 */
+        .header-right { display: flex; align-items: center; gap: 8px; }
+        .profit-tag { color: var(--primary); font-family: 'JetBrains Mono'; font-weight: 700; font-size: 1.15rem; }
+        .calc-icon-inline { color: var(--accent); cursor: pointer; font-size: 1.2rem; transition: 0.2s; }
 
-        .match-title { display: block; margin: 12px 0; font-weight: 700; color: white; font-size: 1rem; line-height: 1.4; }
+        .match-title { display: block; margin: 12px 0; font-weight: 700; color: white; font-size: 1.05rem; line-height: 1.4; }
+        
+        /* 그리드 시스템 (2Way, 3Way 가변형) */
         .odds-row { display: grid; gap: 8px; margin-top: 10px; }
         .grid-2 { grid-template-columns: 1fr 1fr; }
         .grid-3 { grid-template-columns: 1fr 1fr 1fr; }
-        .odd-item { background: #0d1117; padding: 12px 4px; border-radius: 10px; text-align: center; border: 1px solid #21262d; }
-        .o-val { color: var(--primary); font-weight: 700; font-family: 'JetBrains Mono'; font-size: 1.05rem; }
+        
+        .odd-item { background: #0d1117; padding: 14px 4px; border-radius: 10px; text-align: center; border: 1px solid #21262d; }
+        .o-target { display: block; font-size: 0.7rem; color: #8b949e; margin-bottom: 6px; }
+        .o-val { color: var(--primary); font-weight: 700; font-family: 'JetBrains Mono'; font-size: 1.1rem; }
 
-        /* [v8.5 신규] STATS 대시보드 스타일 */
-        .stats-container { padding: 0 10px; }
-        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+        /* STATS 대시보드 */
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 0 10px; }
         .stat-box { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 15px; text-align: center; }
-        .stat-label { font-size: 0.7rem; color: #8b949e; display: block; margin-bottom: 5px; }
-        .stat-value { font-family: 'JetBrains Mono'; font-weight: 700; font-size: 1.2rem; color: var(--primary); }
-        .chart-mock { height: 4px; background: var(--border); border-radius: 2px; margin-top: 10px; overflow: hidden; }
-        .chart-fill { height: 100%; background: var(--primary); transition: 0.5s; }
+        .stat-value { font-family: 'JetBrains Mono'; color: var(--primary); font-weight: 700; font-size: 1.3rem; }
 
-        /* 계산기 스타일 유지 */
+        /* 계산기 스타일 */
         .calc-container { background: var(--card); border-radius: 15px; padding: 20px; border: 1px solid var(--border); margin: 0 10px; }
-        .calc-input { width: 100%; background: #0d1117; border: 1px solid var(--border); border-radius: 10px; padding: 14px; color: white; margin-bottom: 15px; box-sizing: border-box; font-size: 1.1rem; }
+        .calc-input { width: 100%; background: #0d1117; border: 1px solid var(--border); border-radius: 10px; padding: 14px; color: white; margin-bottom: 15px; font-size: 1.1rem; font-family: 'JetBrains Mono'; }
 
         nav { position: fixed; bottom: 0; width: 100%; background: var(--card); border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 12px 0; z-index: 1000; }
-        .nav-link { color: #8b949e; text-decoration: none; font-size: 0.65rem; text-align: center; cursor: pointer; }
-        .nav-link i { display: block; font-size: 1.3rem; margin-bottom: 5px; }
+        .nav-link { color: #8b949e; text-decoration: none; font-size: 0.65rem; text-align: center; }
+        .nav-link i { display: block; font-size: 1.35rem; margin-bottom: 5px; }
         .nav-link.active { color: var(--primary); }
         .v-footer { text-align: center; font-size: 0.65rem; color: #484f58; padding: 25px 0; font-family: 'JetBrains Mono'; }
     </style>
@@ -60,48 +85,27 @@
 <body>
 
 <header>
-    <div class="logo">SureTrack v8.5</div>
+    <div class="logo">SureTrack v8.5.1</div>
     <div class="status-container"><span class="live-status-dot"></span>SCANNING LIVE</div>
 </header>
 
 <div id="tab-scanner" class="tab-content active-tab"><div id="list"></div></div>
 
 <div id="tab-stats" class="tab-content">
-    <div class="stats-container">
-        <div class="stats-grid">
-            <div class="stat-box">
-                <span class="stat-label">발견된 기회</span>
-                <span id="stat-count" class="stat-value">0</span>
-            </div>
-            <div class="stat-box">
-                <span class="stat-label">평균 수익률</span>
-                <span id="stat-avg" class="stat-value">0%</span>
-            </div>
-            <div class="stat-box">
-                <span class="stat-label">최대 수익률</span>
-                <span id="stat-max" class="stat-value">0%</span>
-            </div>
-            <div class="stat-box">
-                <span class="stat-label">업데이트(분 전)</span>
-                <span id="stat-time" class="stat-value">0</span>
-            </div>
-        </div>
-        <div class="stat-box" style="text-align: left; margin-bottom: 10px;">
-            <span class="stat-label">마켓 분포 (승무패 vs 언오바)</span>
-            <div id="market-dist-text" style="font-size: 0.8rem; margin-bottom: 5px;">H2H: 0% / TOTALS: 0%</div>
-            <div class="chart-mock"><div id="market-bar" class="chart-fill" style="width: 0%"></div></div>
-        </div>
+    <div class="stats-grid">
+        <div class="stat-box"><span style="font-size:0.7rem">TOTAL OPS</span><br><span id="stat-count" class="stat-value">0</span></div>
+        <div class="stat-box"><span style="font-size:0.7rem">AVG PROFIT</span><br><span id="stat-avg" class="stat-value">0%</span></div>
     </div>
 </div>
 
 <div id="tab-calc" class="tab-content">
     <div class="calc-container">
-        <h3 style="color:var(--primary); margin-top:0"><i class="fa-solid fa-calculator"></i> Calculator</h3>
+        <h3 style="color:var(--primary); margin-top:0">Calculator</h3>
         <input type="number" id="o1" class="calc-input" placeholder="Odd A" oninput="runCalc()">
         <input type="number" id="o3" class="calc-input" placeholder="Odd B (Draw)" oninput="runCalc()">
         <input type="number" id="o2" class="calc-input" placeholder="Odd C" oninput="runCalc()">
         <input type="number" id="total" class="calc-input" value="1000000" oninput="runCalc()">
-        <div id="calc-res" class="res-box">배당 정보를 선택하세요.</div>
+        <div id="calc-res" style="background:rgba(0,255,65,0.05); padding:15px; border-radius:10px; border:1px solid var(--primary)"></div>
     </div>
 </div>
 
@@ -111,9 +115,10 @@
     <div class="nav-link" onclick="go('stats', event)"><i class="fa-solid fa-chart-pie"></i>STATS</div>
 </nav>
 
-<div class="v-footer">v8.5 SureTrack Golden Master | AI Intelligence</div>
+<div class="v-footer">v8.5.1 SureTrack Golden Master | AI Arbitrage Intelligence</div>
 
 <script>
+    // 하쿠님의 최종 GAS URL
     const URL = 'https://script.google.com/macros/s/AKfycbx6yjWtdnE06qGtnW95xAtQnSyCgjYIBGBzm6n9e945tUeYPeULg71Tp_5CEImbYBAO/exec';
 
     function go(t, e) {
@@ -127,12 +132,12 @@
         try {
             const res = await fetch(URL);
             const data = await res.json();
-            renderScanner(data);
-            updateStats(data); // 통계 데이터 업데이트
-        } catch (e) { console.error("Data Error", e); }
+            render(data);
+            updateStats(data);
+        } catch (e) { console.error("Data Load Error", e); }
     }
 
-    function renderScanner(items) {
+    function render(items) {
         const div = document.getElementById('list');
         div.innerHTML = '';
         items.forEach(item => {
@@ -141,7 +146,7 @@
             card.className = 'bet-card';
             card.innerHTML = `
                 <div class="card-header">
-                    <span class="market-badge">${item['마켓타입'] === 'H2H' ? '1X2' : 'TOTAL'}</span>
+                    <span class="market-badge">${item['마켓타입'] === 'H2H' ? '1X2 (승무패)' : 'TOTAL (언오바)'}</span>
                     <div class="header-right">
                         <span class="profit-tag">+${item['수익률(%)']}%</span>
                         <i class="fa-solid fa-calculator calc-icon-inline" onclick="event.stopPropagation(); openCalc('${item['배당A']}', '${item['배당B']}', '${item['배당C']}')"></i>
@@ -149,9 +154,9 @@
                 </div>
                 <span class="match-title">${item['경기명']}</span>
                 <div class="odds-row ${is3Way ? 'grid-3' : 'grid-2'}">
-                    <div class="odd-item"><span class="o-val">${item['배당A']}</span></div>
-                    ${is3Way ? `<div class="odd-item"><span class="o-val" style="color:var(--accent)">${item['배당B']}</span></div>` : ''}
-                    <div class="odd-item"><span class="o-val">${is3Way ? item['배당C'] : item['배당B']}</span></div>
+                    <div class="odd-item"><span class="o-target">${item['타겟A']}</span><span class="o-val">${parseFloat(item['배당A']).toFixed(2)}</span></div>
+                    ${is3Way ? `<div class="odd-item"><span class="o-target">무승부</span><span class="o-val" style="color:var(--accent)">${parseFloat(item['배당B']).toFixed(2)}</span></div>` : ''}
+                    <div class="odd-item"><span class="o-target">${is3Way ? item['타겟C'] : item['타겟B']}</span><span class="o-val">${is3Way ? parseFloat(item['배당C']).toFixed(2) : parseFloat(item['배당B']).toFixed(2)}</span></div>
                 </div>
             `;
             card.onclick = () => openCalc(item['배당A'], item['배당B'], item['배당C']);
@@ -162,18 +167,9 @@
     function updateStats(data) {
         if(!data || data.length === 0) return;
         const count = data.length;
-        const profits = data.map(d => parseFloat(d['수익률(%)']));
-        const avg = (profits.reduce((a, b) => a + b, 0) / count).toFixed(2);
-        const max = Math.max(...profits).toFixed(2);
-        const h2hCount = data.filter(d => d['마켓타입'] === 'H2H').length;
-        const totalsCount = count - h2hCount;
-        const h2hPercent = ((h2hCount / count) * 100).toFixed(0);
-
+        const avg = (data.reduce((a, b) => a + parseFloat(b['수익률(%)']), 0) / count).toFixed(2);
         document.getElementById('stat-count').innerText = count;
         document.getElementById('stat-avg').innerText = avg + "%";
-        document.getElementById('stat-max').innerText = max + "%";
-        document.getElementById('market-dist-text').innerText = `H2H: ${h2hPercent}% / TOTALS: ${100-h2hPercent}%`;
-        document.getElementById('market-bar').style.width = h2hPercent + "%";
     }
 
     function openCalc(a, b, c) {
