@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>SureTrack v9.2 Golden Master</title>
+<title>SureTrack v9.3 Golden Master</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <style>
@@ -30,10 +30,8 @@ body { font-family: 'Inter', sans-serif; background-color: #020617; color: white
 .version-tag { font-size: 10px; color: #475569; font-weight: bold; text-align: center; padding: 25px; letter-spacing: 1.5px; opacity: 0.5; }
 .calc-mode-btn { flex: 1; padding: 12px; font-size: 11px; font-weight: 900; border-radius: 12px; background: rgba(255,255,255,0.05); color: #64748b; transition: all 0.2s; }
 .calc-mode-btn.active { background: #4f46e5; color: white; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4); }
-/* v9.2 Mapping Badge Style */
-.bookie-tag { font-size: 8px; font-weight: 900; padding: 1px 4px; border-radius: 4px; display: block; margin-bottom: 2px; text-transform: uppercase; }
-.tag-a { background: #4f46e5; color: white; }
-.tag-b { background: #f59e0b; color: white; }
+/* v9.3 Logo Badge Style */
+.direct-logo { width: 18px; height: 18px; border-radius: 4px; margin-top: 4px; border: 1px solid rgba(255,255,255,0.1); }
 </style>
 </head>
 <body>
@@ -52,7 +50,7 @@ body { font-family: 'Inter', sans-serif; background-color: #020617; color: white
 <button onclick="fetchMatches()" class="text-indigo-400 text-[10px] font-black uppercase">Refresh Feed</button>
 </div>
 <div id="api-match-container" class="space-y-4"></div>
-<div class="version-tag">v9.2 TON Golden Master</div>
+<div class="version-tag">v9.3 TON Golden Master</div>
 </main>
 
 <section id="calc-tab" class="tab-content p-4">
@@ -83,7 +81,7 @@ body { font-family: 'Inter', sans-serif; background-color: #020617; color: white
 </div>
 </div>
 </div>
-<div class="version-tag">v9.2 TON Golden Master</div>
+<div class="version-tag">v9.3 TON Golden Master</div>
 </section>
 
 <section id="bookies-tab" class="tab-content p-4">
@@ -95,7 +93,7 @@ body { font-family: 'Inter', sans-serif; background-color: #020617; color: white
 </div>
 </div>
 <div id="partner-list" class="space-y-2.5"></div>
-<div class="version-tag">v9.2 TON Golden Master</div>
+<div class="version-tag">v9.3 TON Golden Master</div>
 </section>
 
 <section id="history-tab" class="tab-content p-4">
@@ -105,7 +103,7 @@ body { font-family: 'Inter', sans-serif; background-color: #020617; color: white
 <div class="glass p-4 rounded-2xl text-center"><div class="text-[8px] font-black text-slate-500 uppercase">Total Bets</div><div id="total-bets-val" class="text-white font-black text-sm">0</div></div>
 </div>
 <div id="history-list" class="space-y-3"></div>
-<div class="version-tag">v9.2 TON Golden Master</div>
+<div class="version-tag">v9.3 TON Golden Master</div>
 </section>
 
 <section id="saas-tab" class="tab-content p-4">
@@ -115,7 +113,7 @@ body { font-family: 'Inter', sans-serif; background-color: #020617; color: white
 <div class="premium-gradient p-7 rounded-[32px] shadow-2xl relative overflow-hidden"><h3 class="text-lg font-black text-white uppercase italic mb-4">Pro Elite</h3><ul class="space-y-2 text-[10px] text-white/90 font-bold uppercase italic border-b border-white/10 pb-4 mb-4"><li>• ROI Limit: Unlimited</li><li>• Speed: Real-time Live</li></ul><div class="text-2xl font-black italic">19.9 TON / MO</div><i class="fa-solid fa-bolt absolute -bottom-4 -right-2 text-white/10 text-8xl"></i></div>
 <div class="elite-gradient p-7 rounded-[32px] shadow-2xl relative overflow-hidden"><h3 class="text-xl font-black text-white uppercase italic mb-4">Elite Master</h3><ul class="space-y-2 text-[10px] text-white/95 font-bold uppercase italic border-b border-white/10 pb-4 mb-4"><li>• ROI: Max + Picks</li><li>• Alerts: 0.1s Priority</li></ul><div class="text-2xl font-black italic">49.9 TON / MO</div><i class="fa-solid fa-crown absolute -bottom-4 -right-2 text-white/10 text-8xl"></i></div>
 </div>
-<div class="version-tag">v9.2 TON Golden Master</div>
+<div class="version-tag">v9.3 TON Golden Master</div>
 </section>
 
 <nav class="bottom-nav">
@@ -127,7 +125,6 @@ body { font-family: 'Inter', sans-serif; background-color: #020617; color: white
 </nav>
 
 <script>
-// RNG 및 데이터 보존을 위한 State (UTC 기반 결정론적 로직 유지)
 const state = { balance: 5720.50, calcMode: 2, currentMatch: "", lastCalc: null, history: JSON.parse(localStorage.getItem('suretrack_history')) || [], currentBookA: "", currentBookB: "" };
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbx6yjWtdnE06qGtnW95xAtQnSyCgjYIBGBzm6n9e945tUeYPeULg71Tp_5CEImbYBAO/exec';
 
@@ -154,6 +151,8 @@ data.forEach(m => {
 const { sEmoji, gText, lEmoji } = getMatchIdentity(m['리그명'], m['종목']);
 const kTime = formatKoreanTime(m['시작시간']);
 const is3Way = m['배당C'] && m['배당C'] !== "";
+const domainA = m['북A'].toLowerCase().replace(/\s/g,'') + ".com";
+const domainB = m['북B'].toLowerCase().replace(/\s/g,'') + ".com";
 const card = document.createElement('div');
 card.className = 'glass rounded-[30px] overflow-hidden shadow-2xl';
 card.innerHTML = `
@@ -162,23 +161,31 @@ card.innerHTML = `
     <div class="text-lg font-black tracking-tighter text-white italic">${m['경기명']}</div>
     <div class="text-[10px] font-black text-indigo-400 mb-3">${kTime}</div>
     <div class="text-[9px] font-black text-slate-600 uppercase tracking-[0.3em] mb-1.5">${m['마켓타입']||'1X2'}</div>
-    <div class="text-xl text-white font-mono font-black italic tracking-[0.1em] bg-black/30 py-2 rounded-xl border border-white/5 flex justify-around items-center">
-        <div class="text-center"><span class="bookie-tag tag-a">A</span>${m['배당A']}</div>
-        <span class="text-slate-700 mx-1">/</span>
-        <div class="text-center"><span class="bookie-tag ${is3Way ? 'tag-a' : 'tag-b'}">${is3Way ? 'A' : 'B'}</span>${m['배당B']}</div>
-        ${is3Way ? '<span class="text-slate-700 mx-1">/</span><div class="text-center"><span class="bookie-tag tag-b">B</span>'+m['배당C']+'</div>' : ''}
+    <div class="text-xl text-white font-mono font-black italic tracking-[0.1em] bg-black/30 py-3 rounded-xl border border-white/5 flex justify-around items-end">
+        <div class="flex flex-col items-center">
+            <span class="text-xs text-slate-500 font-bold mb-1 tracking-tighter">WIN</span>
+            <span>${m['배당A']}</span>
+            <img src="https://icon.horse/icon/${domainA}" class="direct-logo" onerror="this.src='https://ui-avatars.com/api/?name=A&background=1e293b&color=fff'">
+        </div>
+        <span class="text-slate-700 pb-2">/</span>
+        <div class="flex flex-col items-center">
+            <span class="text-xs text-slate-500 font-bold mb-1 tracking-tighter">${is3Way ? 'DRAW' : 'LOSE'}</span>
+            <span>${m['배당B']}</span>
+            <img src="https://icon.horse/icon/${is3Way ? domainA : domainB}" class="direct-logo" onerror="this.src='https://ui-avatars.com/api/?name=${is3Way ? 'A' : 'B'}&background=1e293b&color=fff'">
+        </div>
+        ${is3Way ? `
+        <span class="text-slate-700 pb-2">/</span>
+        <div class="flex flex-col items-center">
+            <span class="text-xs text-slate-500 font-bold mb-1 tracking-tighter">LOSE</span>
+            <span>${m['배당C']}</span>
+            <img src="https://icon.horse/icon/${domainB}" class="direct-logo" onerror="this.src='https://ui-avatars.com/api/?name=B&background=1e293b&color=fff'">
+        </div>` : ''}
     </div>
 </div>
 <div class="center-logo-box border-t border-b border-white/5">
-    <a href="https://${m['북A'].toLowerCase().replace(/\s/g,'')}.com" target="_blank" class="flex items-center gap-3 group">
-        <div class="logo-container"><div class="initial-badge">A</div><img src="https://icon.horse/icon/${m['북A'].toLowerCase().replace(/\s/g,'')}.com" class="logo-img" onload="this.style.opacity=1"></div>
-        <span class="text-[11px] font-bold text-slate-400 italic group-hover:text-indigo-400 transition-colors">${m['북A']}</span>
-    </a>
+    <div class="flex items-center gap-2 group"><div class="logo-container"><div class="initial-badge">A</div><img src="https://icon.horse/icon/${domainA}" class="logo-img" onload="this.style.opacity=1"></div><span class="text-[10px] font-bold text-slate-400 italic">${m['북A']}</span></div>
     <div class="text-slate-700 text-[9px] font-black italic">VS</div>
-    <a href="https://${m['북B'].toLowerCase().replace(/\s/g,'')}.com" target="_blank" class="flex items-center gap-3 group">
-        <div class="logo-container"><div class="initial-badge">B</div><img src="https://icon.horse/icon/${m['북B'].toLowerCase().replace(/\s/g,'')}.com" class="logo-img" onload="this.style.opacity=1"></div>
-        <span class="text-[11px] font-bold text-slate-400 italic group-hover:text-indigo-400 transition-colors">${m['북B']}</span>
-    </a>
+    <div class="flex items-center gap-2 group"><div class="logo-container"><div class="initial-badge">B</div><img src="https://icon.horse/icon/${domainB}" class="logo-img" onload="this.style.opacity=1"></div><span class="text-[10px] font-bold text-slate-400 italic">${m['북B']}</span></div>
 </div>
 <div class="p-4 flex justify-between items-center bg-slate-900/50">
     <div><div class="text-[8px] text-slate-600 font-black uppercase tracking-widest">EXPECTED ROI</div><div class="text-green-400 font-black text-2xl tracking-tighter italic">+${m['수익률(%)']}%</div></div>
@@ -208,16 +215,18 @@ function runCalculation() {
 const s = parseFloat(document.getElementById('calc-seed').value) || 0; const a = parseFloat(document.getElementById('odds-a').value) || 0; const b = parseFloat(document.getElementById('odds-b').value) || 0; const res = document.getElementById('calc-results'); 
 if(s<=0 || a<=0 || b<=0) { res.style.opacity="0.2"; return; } res.style.opacity="1"; 
 let sA, sB, sC=0, tP=0; 
+const iconA = `https://icon.horse/icon/${state.currentBookA.toLowerCase().replace(/\s/g,'')}.com`;
+const iconB = `https://icon.horse/icon/${state.currentBookB.toLowerCase().replace(/\s/g,'')}.com`;
 if(state.calcMode===2) { 
     tP=(1/a)+(1/b); sA=(s/a)/tP; sB=(s/b)/tP; 
-    document.getElementById('label-a').innerHTML = `<span class="text-indigo-400">[${state.currentBookA || 'A'}]</span> WIN`;
-    document.getElementById('label-b').innerHTML = `<span class="text-amber-500">[${state.currentBookB || 'B'}]</span> LOSE`;
+    document.getElementById('label-a').innerHTML = `<img src="${iconA}" class="inline w-3 h-3 mr-1 rounded-sm"> WIN`;
+    document.getElementById('label-b').innerHTML = `<img src="${iconB}" class="inline w-3 h-3 mr-1 rounded-sm"> LOSE`;
 } else { 
     const c=parseFloat(document.getElementById('odds-c').value)||0; if(c<=0) return; tP=(1/a)+(1/b)+(1/c); sA=(s/a)/tP; sB=(s/b)/tP; sC=(s/c)/tP; 
     document.getElementById('res-c').innerText = Math.floor(sC).toLocaleString(); 
-    document.getElementById('label-a').innerHTML = `<span class="text-indigo-400">[${state.currentBookA || 'A'}]</span> HOME`;
-    document.getElementById('label-b').innerHTML = `<span class="text-indigo-400">[${state.currentBookA || 'A'}]</span> DRAW`;
-    document.getElementById('label-c').innerHTML = `<span class="text-amber-500">[${state.currentBookB || 'B'}]</span> AWAY`;
+    document.getElementById('label-a').innerHTML = `<img src="${iconA}" class="inline w-3 h-3 mr-1 rounded-sm"> HOME`;
+    document.getElementById('label-b').innerHTML = `<img src="${iconA}" class="inline w-3 h-3 mr-1 rounded-sm"> DRAW`;
+    document.getElementById('label-c').innerHTML = `<img src="${iconB}" class="inline w-3 h-3 mr-1 rounded-sm"> AWAY`;
 } 
 document.getElementById('res-a').innerText = Math.floor(sA).toLocaleString(); document.getElementById('res-b').innerText = Math.floor(sB).toLocaleString(); document.getElementById('res-profit').innerText = Math.floor((s/tP)-s).toLocaleString(); document.getElementById('res-roi').innerText = (((1/tP)-1)*100).toFixed(2) + "%"; 
 state.lastCalc = { match: state.currentMatch || "Manual Arbitrage", invested: s, profit: Math.floor((s/tP)-s), roi: (((1/tP)-1)*100).toFixed(2) }; 
