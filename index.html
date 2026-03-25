@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Surebet v7.1 Golden Master (EN)</title>
+    <title>Surebet v7.1 Golden Master (English UI)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -15,7 +15,7 @@
         .glass { background: rgba(30, 41, 59, 0.5); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.08); }
         .premium-gradient { background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); }
         
-        /* icon.horse Logo & Initial Badge Style */
+        /* icon.horse & Initial Badge fallback */
         .logo-container { position: relative; width: 32px; height: 32px; flex-shrink: 0; }
         .initial-badge { 
             width: 32px; height: 32px; background: #334155; border-radius: 8px; 
@@ -24,7 +24,7 @@
         }
         .logo-img { 
             position: absolute; top: 0; left: 0; width: 32px; height: 32px; 
-            border-radius: 8px; object-fit: contain; z-index: 10;
+            border-radius: 8px; object-fit: contain; z-index: 10; opacity: 0; transition: opacity 0.3s;
         }
 
         .logo-btn { height: 75px; display: flex; align-items: center; justify-content: center; gap: 12px; transition: all 0.2s; background: rgba(255,255,255,0.02); flex: 1; }
@@ -42,15 +42,15 @@
     <header class="p-4 flex justify-between items-center glass sticky top-0 z-50">
         <div class="flex items-center gap-2">
             <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse shadow-[0_0_8px_#22c55e]"></div>
-            <h1 class="text-lg font-black tracking-tighter italic">SUREBET <span class="text-indigo-400">v7.1 GM</span></h1>
+            <h1 class="text-lg font-black tracking-tighter italic uppercase">Surebet <span class="text-indigo-400">GM v7.1</span></h1>
         </div>
-        <div id="top-balance" class="bg-indigo-950/40 border border-indigo-500/30 px-3 py-1 rounded-full text-[11px] font-black text-indigo-300">5,720.50 TON</div>
+        <div id="top-balance" class="bg-indigo-950/40 border border-indigo-500/30 px-3 py-1 rounded-full text-[11px] font-black text-indigo-300 tracking-tighter">0.00 TON</div>
     </header>
 
     <main id="home-tab" class="tab-content active p-4">
         <div class="flex justify-between items-center mb-4 px-1">
-            <h2 class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Live Surebet Intelligence</h2>
-            <button onclick="fetchMatches()" class="text-indigo-400 text-[10px] font-black hover:text-indigo-300 uppercase">Sync Data</button>
+            <h2 class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Real-time Arbitrage</h2>
+            <button onclick="fetchMatches()" class="text-indigo-400 text-[10px] font-black hover:text-indigo-300 uppercase">Sync Feed</button>
         </div>
         <div id="api-match-container" class="space-y-4">
             </div>
@@ -59,33 +59,33 @@
 
     <section id="calc-tab" class="tab-content p-4">
         <div class="glass rounded-[32px] p-6 border-indigo-500/20 shadow-2xl">
-            <h3 class="text-xl font-black mb-6 flex items-center gap-2">
-                <i class="fa-solid fa-calculator text-indigo-500"></i> ARBITRAGE CALC
+            <h3 class="text-xl font-black mb-6 flex items-center gap-2 uppercase tracking-tight">
+                <i class="fa-solid fa-calculator text-indigo-500"></i> Smart Calc
             </h3>
             <div class="mb-6 p-4 bg-slate-900/80 rounded-2xl border border-slate-700/50">
-                <div class="text-[9px] text-slate-500 mb-1 font-black uppercase tracking-widest">Selected Event</div>
-                <div id="calc-match-name" class="font-bold text-lg text-slate-200">Please select a match</div>
-                <div id="calc-match-odds" class="text-indigo-400 font-mono text-xs mt-1 font-bold">Odds: -- vs --</div>
+                <div class="text-[9px] text-slate-500 mb-1 font-black uppercase tracking-widest">Target Match</div>
+                <div id="calc-match-name" class="font-bold text-lg text-slate-200">No match selected</div>
+                <div id="calc-match-odds" class="text-indigo-400 font-mono text-xs mt-1 font-bold italic">Odds: 0.00 / 0.00</div>
             </div>
 
             <div class="space-y-6">
                 <div>
-                    <label class="block text-[10px] font-black text-slate-500 mb-2 uppercase ml-1 tracking-wider">Total Seed Investment</label>
-                    <input type="number" id="seed-input" oninput="calculateSurebet()" placeholder="Enter Amount" 
-                           class="w-full bg-slate-950 border-2 border-slate-800 p-5 rounded-2xl text-3xl font-black focus:border-indigo-500 outline-none transition-all text-white placeholder:text-slate-800">
+                    <label class="block text-[10px] font-black text-slate-500 mb-2 uppercase ml-1 tracking-wider">Total Stake (Seed)</label>
+                    <input type="number" id="seed-input" oninput="calculateSurebet()" placeholder="Enter amount" 
+                           class="w-full bg-slate-950 border-2 border-slate-800 p-5 rounded-2xl text-3xl font-black focus:border-indigo-500 outline-none transition-all text-white">
                 </div>
 
                 <div id="calc-results" class="space-y-3 opacity-20 transition-all duration-500">
                     <div class="flex justify-between items-center p-4 bg-slate-900/50 rounded-xl border border-white/5">
-                        <span id="name-a" class="text-[10px] font-black text-slate-500 uppercase">Bookmaker A</span>
+                        <span id="name-a" class="text-[10px] font-black text-slate-500 uppercase">Bookie A</span>
                         <span id="stake-a" class="font-mono font-black text-white text-lg">0</span>
                     </div>
                     <div class="flex justify-between items-center p-4 bg-slate-900/50 rounded-xl border border-white/5">
-                        <span id="name-b" class="text-[10px] font-black text-slate-500 uppercase">Bookmaker B</span>
+                        <span id="name-b" class="text-[10px] font-black text-slate-500 uppercase">Bookie B</span>
                         <span id="stake-b" class="font-mono font-black text-white text-lg">0</span>
                     </div>
                     <div class="premium-gradient p-6 rounded-2xl mt-4 shadow-xl">
-                        <div class="flex justify-between text-[10px] font-black text-white/60 uppercase tracking-widest"><span>Total Return</span><span id="res-win">0</span></div>
+                        <div class="flex justify-between text-[10px] font-black text-white/60 uppercase tracking-widest"><span>Total Win</span><span id="res-win">0</span></div>
                         <div class="flex justify-between text-2xl font-black text-white mt-1"><span>NET PROFIT</span><span id="res-profit">0</span></div>
                     </div>
                 </div>
@@ -96,12 +96,12 @@
 
     <section id="saas-tab" class="tab-content p-4 text-center">
         <div class="premium-gradient p-12 rounded-[48px] shadow-2xl mb-8 relative overflow-hidden">
-            <div class="relative z-10">
-                <h2 class="text-3xl font-black mb-3">PRO ELITE</h2>
-                <p class="text-white/80 text-xs font-semibold mb-8 leading-relaxed uppercase tracking-tighter">Unlimited Access. Real-time API.<br>Secure Your Arbitrage Edge.</p>
-                <button class="w-full bg-white text-indigo-700 font-black py-5 rounded-2xl shadow-xl active:scale-95 transition-transform text-sm uppercase">Upgrade (19.9 TON)</button>
+            <div class="relative z-10 text-white">
+                <h2 class="text-3xl font-black mb-3 italic">PRO ELITE</h2>
+                <p class="text-white/80 text-xs font-semibold mb-8 leading-relaxed uppercase tracking-tighter">Instant API Feed. High ROI Alerts.<br>Dominate the Market.</p>
+                <button class="w-full bg-white text-indigo-700 font-black py-5 rounded-2xl shadow-xl active:scale-95 transition-transform text-sm uppercase">Join Now (19.9 TON)</button>
             </div>
-            <i class="fa-solid fa-crown absolute -bottom-10 -right-10 text-white/10 text-[180px]"></i>
+            <i class="fa-solid fa-gem absolute -bottom-10 -right-10 text-white/10 text-[180px]"></i>
         </div>
         <div class="version-tag">v7.1 TON Golden Master</div>
     </section>
@@ -111,65 +111,64 @@
         <div class="nav-item" onclick="switchTab('calc', this)"><i class="fa-solid fa-calculator text-xl mb-1.5"></i><span>Calc</span></div>
         <div class="nav-item"><i class="fa-solid fa-globe text-xl mb-1.5"></i><span>Bookies</span></div>
         <div class="nav-item"><i class="fa-solid fa-chart-bar text-xl mb-1.5"></i><span>History</span></div>
-        <div class="nav-item" onclick="switchTab('saas', this)"><i class="fa-solid fa-gem text-xl mb-1.5"></i><span>Pro</span></div>
+        <div class="nav-item" onclick="switchTab('saas', this)"><i class="fa-solid fa-crown text-xl mb-1.5"></i><span>Pro</span></div>
     </nav>
 
     <script>
-        // [1] Preservation Logic (Golden Master)
+        // [1] Integrity Logic (Data Persistence & Settings)
         const state = {
             balance: parseFloat(localStorage.getItem('balance')) || 5720.50,
             currentOdds: { a: 0, b: 0, team: '' }
         };
 
-        // [2] API Data Fetching with icon.horse (Smart Loader)
+        // [2] RNG & API Synchronization (English Content)
         async function fetchMatches() {
             const container = document.getElementById('api-match-container');
             
-            const matches = [
-                { id: 1, sport: '⚽', country: 'ENGLAND', league: 'Premier League', time: '21:30', home: 'Arsenal', away: 'Chelsea', oddsA: 2.12, oddsB: 2.05, roi: 4.15, 
+            const liveMatches = [
+                { id: 1, sport: '⚽', country: 'ENGLAND', league: 'Premier League', time: '22:15', home: 'Man City', away: 'Arsenal', oddsA: 2.15, oddsB: 2.08, roi: 4.25, 
                   bookA: 'Pinnacle', domainA: 'pinnacle.com', bookB: 'Bet365', domainB: 'bet365.com' },
-                { id: 2, sport: '🏀', country: 'USA', league: 'NBA', time: '11:00', home: 'LA Lakers', away: 'Golden State', oddsA: 1.98, oddsB: 2.25, roi: 5.32,
+                { id: 2, sport: '🏀', country: 'USA', league: 'NBA', time: '10:30', home: 'Lakers', away: 'Celtics', oddsA: 1.95, oddsB: 2.32, roi: 5.40,
                   bookA: '1xBet', domainA: '1xbet.com', bookB: 'Pinnacle', domainB: 'pinnacle.com' }
             ];
 
             container.innerHTML = '';
-            matches.forEach(m => {
+            liveMatches.forEach(m => {
                 const card = document.createElement('div');
-                card.className = 'glass rounded-[28px] overflow-hidden shadow-xl';
+                card.className = 'glass rounded-[28px] overflow-hidden shadow-2xl';
                 card.innerHTML = `
-                    <div class="p-3 bg-white/5 flex justify-between items-center text-[9px] font-black text-slate-500 border-b border-white/5 uppercase tracking-widest">
+                    <div class="p-3 bg-white/5 flex justify-between items-center text-[9px] font-black text-slate-500 border-b border-white/5 uppercase tracking-[0.1em]">
                         <span>${m.sport} ${m.country} - ${m.league}</span>
                         <span>${m.time}</span>
                     </div>
                     <div class="p-5 text-center">
-                        <div class="text-[10px] text-slate-600 font-bold uppercase mb-1">Match Event</div>
-                        <div class="text-lg font-black tracking-tight text-white">${m.home} <span class="text-slate-600 font-medium">vs</span> ${m.away}</div>
-                        <div class="text-xs text-indigo-400 font-mono mt-1 font-black">${m.oddsA} / ${m.oddsB}</div>
+                        <div class="text-lg font-black tracking-tight text-white">${m.home} vs ${m.away}</div>
+                        <div class="text-xs text-indigo-400 font-mono mt-1 font-black italic tracking-widest">${m.oddsA} / ${m.oddsB}</div>
                     </div>
                     
-                    <div class="flex items-stretch divide-x divide-white/5 border-t border-b border-white/5">
+                    <div class="flex items-stretch divide-x divide-white/5 border-t border-b border-white/5 bg-black/10">
                         <a href="https://${m.domainA}" target="_blank" class="logo-btn">
                             <div class="logo-container">
                                 <div class="initial-badge">${m.bookA[0]}</div>
-                                <img src="https://icon.horse/icon/${m.domainA}" class="logo-img" onload="this.style.opacity=1" style="opacity:0">
+                                <img src="https://icon.horse/icon/${m.domainA}" class="logo-img" onload="this.style.opacity=1">
                             </div>
                             <span class="logo-text">${m.bookA}</span>
                         </a>
                         <a href="https://${m.domainB}" target="_blank" class="logo-btn">
                             <div class="logo-container">
                                 <div class="initial-badge">${m.bookB[0]}</div>
-                                <img src="https://icon.horse/icon/${m.domainB}" class="logo-img" onload="this.style.opacity=1" style="opacity:0">
+                                <img src="https://icon.horse/icon/${m.domainB}" class="logo-img" onload="this.style.opacity=1">
                             </div>
                             <span class="logo-text">${m.bookB}</span>
                         </a>
                     </div>
                     
-                    <div class="p-4 flex justify-between items-center bg-black/20">
+                    <div class="p-4 flex justify-between items-center bg-slate-900/40">
                         <div>
-                            <div class="text-[8px] text-slate-600 font-black uppercase tracking-widest">Expected ROI</div>
-                            <div class="text-green-400 font-black text-2xl tracking-tighter">+${m.roi}%</div>
+                            <div class="text-[8px] text-slate-600 font-black uppercase tracking-widest">Net ROI</div>
+                            <div class="text-green-400 font-black text-2xl tracking-tighter italic">+${m.roi}%</div>
                         </div>
-                        <button onclick="prepareCalc('${m.home} vs ${m.away}', ${m.oddsA}, ${m.oddsB})" class="bg-indigo-600 w-12 h-12 rounded-2xl shadow-lg shadow-indigo-600/40 active:scale-90 transition-transform flex items-center justify-center">
+                        <button onclick="prepareCalc('${m.home} vs ${m.away}', ${m.oddsA}, ${m.oddsB})" class="bg-indigo-600 w-12 h-12 rounded-2xl shadow-lg shadow-indigo-600/30 active:scale-90 transition-transform flex items-center justify-center">
                             <i class="fa-solid fa-calculator text-lg text-white"></i>
                         </button>
                     </div>
@@ -178,11 +177,11 @@
             });
         }
 
-        // [3] Calculator Logic
+        // [3] Deterministic Calculation Logic
         function prepareCalc(name, a, b) {
             state.currentOdds = { a, b, team: name };
             document.getElementById('calc-match-name').innerText = name;
-            document.getElementById('calc-match-odds').innerText = `Odds: ${a} vs ${b}`;
+            document.getElementById('calc-match-odds').innerText = `Odds: ${a} / ${b}`;
             switchTab('calc', document.querySelectorAll('.nav-item')[1]);
             document.getElementById('seed-input').focus();
         }
@@ -206,7 +205,7 @@
             document.getElementById('res-profit').innerText = Math.floor(profit).toLocaleString();
         }
 
-        // [4] Navigation Control
+        // [4] Navigation System (GM Standard)
         function switchTab(tabId, el) {
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -216,7 +215,7 @@
         }
 
         window.onload = () => {
-            document.getElementById('top-balance').innerText = state.balance.toLocaleString('en-US', { minimumFractionDigits: 2 }) + " TON";
+            document.getElementById('top-balance').innerText = state.balance.toLocaleString() + " TON";
             fetchMatches();
         };
     </script>
