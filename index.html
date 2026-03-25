@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Surebet v7.1 Golden Master (Real Logo)</title>
+    <title>Surebet v7.1 Golden Master</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -15,13 +15,11 @@
         .glass { background: rgba(30, 41, 59, 0.5); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.08); }
         .premium-gradient { background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); }
         
-        /* 로고 배너 스타일 고도화 */
-        .logo-btn { height: 100px; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; padding: 20px; overflow: hidden; }
-        .logo-btn img { max-height: 100%; max-width: 100%; object-fit: contain; transition: all 0.3s ease; filter: grayscale(1) invert(1) opacity(0.7); }
-        
-        /* 터치/호버 시 원본 색상 노출 (UX) */
-        .logo-btn:active img, .logo-btn:hover img { filter: grayscale(0) invert(0) opacity(1); transform: scale(1.05); }
-        .logo-btn:active { background: rgba(255,255,255,0.03); }
+        /* 로고 + 텍스트 버튼 스타일 */
+        .logo-btn { height: 70px; display: flex; align-items: center; justify-content: center; gap: 10px; transition: all 0.2s; background: rgba(255,255,255,0.03); }
+        .logo-btn:active { background: rgba(255,255,255,0.1); transform: scale(0.98); }
+        .logo-img { width: 24px; height: 24px; border-radius: 4px; object-fit: contain; }
+        .logo-text { font-size: 14px; font-weight: 800; letter-spacing: -0.5px; color: #cbd5e1; }
 
         .bottom-nav { position: fixed; bottom: 0; width: 100%; height: 75px; background: #0f172a; border-top: 1px solid #1e293b; display: flex; justify-content: space-around; align-items: center; z-index: 1000; }
         .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; font-size: 11px; color: #64748b; cursor: pointer; }
@@ -40,49 +38,45 @@
     </header>
 
     <main id="home-tab" class="tab-content active p-4">
-        <div class="flex justify-between items-center mb-4">
-            <h2 class="text-sm font-bold text-slate-400 uppercase tracking-widest">Live Surebet Feed</h2>
-            <button onclick="fetchMatches()" class="text-indigo-400 text-xs"><i class="fa-solid fa-rotate"></i> 새로고침</button>
+        <div class="flex justify-between items-center mb-4 px-1">
+            <h2 class="text-xs font-bold text-slate-500 uppercase tracking-widest">Live Surebet Data</h2>
+            <button onclick="fetchMatches()" class="text-indigo-400 text-xs font-bold hover:text-indigo-300">REFRESH</button>
         </div>
         <div id="api-match-container" class="space-y-4">
-            <div class="animate-pulse flex flex-col gap-4">
-                <div class="h-40 bg-slate-800 rounded-3xl w-full"></div>
-                <div class="h-40 bg-slate-800 rounded-3xl w-full"></div>
             </div>
-        </div>
         <div class="version-tag">v7.1 TON Golden Master</div>
     </main>
 
     <section id="calc-tab" class="tab-content p-4">
-        <div class="glass rounded-3xl p-6 border-indigo-500/20">
+        <div class="glass rounded-3xl p-6 border-indigo-500/20 shadow-2xl">
             <h3 class="text-xl font-bold mb-6 flex items-center gap-2">
                 <i class="fa-solid fa-calculator text-indigo-500"></i> 배당 계산기
             </h3>
             <div id="calc-target" class="mb-6 p-4 bg-slate-900/80 rounded-2xl border border-slate-700">
-                <div class="text-xs text-slate-500 mb-1">선택된 경기</div>
+                <div class="text-xs text-slate-500 mb-1 font-bold">SELECTED MATCH</div>
                 <div id="calc-match-name" class="font-bold text-lg">경기를 선택해주세요</div>
-                <div id="calc-match-odds" class="text-indigo-400 font-mono text-sm mt-1">Odds: -- vs --</div>
+                <div id="calc-match-odds" class="text-indigo-400 font-mono text-sm mt-1 font-bold">Odds: -- vs --</div>
             </div>
 
             <div class="space-y-6">
                 <div>
-                    <label class="block text-xs font-bold text-slate-400 mb-2 uppercase ml-1">Total Seed Money</label>
-                    <input type="number" id="seed-input" oninput="calculateSurebet()" placeholder="금액 입력" 
-                           class="w-full bg-slate-900 border-2 border-slate-700 p-4 rounded-2xl text-2xl font-black focus:border-indigo-500 outline-none transition-all">
+                    <label class="block text-[10px] font-black text-slate-400 mb-2 uppercase ml-1">Total Seed Money (TON/KRW)</label>
+                    <input type="number" id="seed-input" oninput="calculateSurebet()" placeholder="0" 
+                           class="w-full bg-slate-900 border-2 border-slate-700 p-5 rounded-2xl text-3xl font-black focus:border-indigo-500 outline-none transition-all text-indigo-100">
                 </div>
 
-                <div id="calc-results" class="space-y-3 opacity-30">
-                    <div class="flex justify-between items-center p-4 bg-slate-800/50 rounded-xl">
-                        <span id="name-a" class="text-sm text-slate-300">Bookmaker A</span>
-                        <span id="stake-a" class="font-mono font-bold text-white text-lg">0원</span>
+                <div id="calc-results" class="space-y-3 opacity-20 transition-opacity duration-300">
+                    <div class="flex justify-between items-center p-4 bg-slate-800/50 rounded-xl border border-white/5">
+                        <span id="name-a" class="text-xs font-bold text-slate-400 uppercase">Bookmaker A</span>
+                        <span id="stake-a" class="font-mono font-black text-white text-xl">0원</span>
                     </div>
-                    <div class="flex justify-between items-center p-4 bg-slate-800/50 rounded-xl">
-                        <span id="name-b" class="text-sm text-slate-300">Bookmaker B</span>
-                        <span id="stake-b" class="font-mono font-bold text-white text-lg">0원</span>
+                    <div class="flex justify-between items-center p-4 bg-slate-800/50 rounded-xl border border-white/5">
+                        <span id="name-b" class="text-xs font-bold text-slate-400 uppercase">Bookmaker B</span>
+                        <span id="stake-b" class="font-mono font-black text-white text-xl">0원</span>
                     </div>
-                    <div class="premium-gradient p-5 rounded-2xl mt-4">
-                        <div class="flex justify-between text-xs text-white/70"><span>예상 당첨금</span><span id="res-win">0원</span></div>
-                        <div class="flex justify-between text-xl font-black text-white mt-1"><span>순수익</span><span id="res-profit">0원</span></div>
+                    <div class="premium-gradient p-5 rounded-2xl mt-4 shadow-lg shadow-indigo-500/20">
+                        <div class="flex justify-between text-[10px] font-bold text-white/70 uppercase"><span>Total Return</span><span id="res-win">0원</span></div>
+                        <div class="flex justify-between text-2xl font-black text-white mt-1"><span>PROFIT</span><span id="res-profit">0원</span></div>
                     </div>
                 </div>
             </div>
@@ -90,20 +84,11 @@
         <div class="version-tag">v7.1 TON Golden Master</div>
     </section>
 
-    <section id="saas-tab" class="tab-content p-4">
-        <div class="premium-gradient p-8 rounded-[40px] text-center mb-6 shadow-2xl shadow-indigo-500/20">
-            <i class="fa-solid fa-gem text-5xl mb-4 text-white/90"></i>
-            <h2 class="text-3xl font-black mb-2">PRO UPGRADE</h2>
-            <p class="text-white/70 text-sm mb-6">모든 양방 경기를 실시간으로 <br>제한 없이 확인하세요</p>
-            <button class="w-full bg-white text-indigo-600 font-black py-4 rounded-2xl hover:scale-105 transition-transform">구독 시작 (19.9 TON)</button>
-        </div>
-        <div class="glass p-6 rounded-3xl">
-            <h4 class="font-bold mb-4">멤버십 혜택</h4>
-            <ul class="space-y-4 text-sm text-slate-300">
-                <li><i class="fa-solid fa-circle-check text-green-400 mr-2"></i> 1% 이상의 고수익 양방 정보 노출</li>
-                <li><i class="fa-solid fa-circle-check text-green-400 mr-2"></i> 북메이커 딥링크 자동 연동</li>
-                <li><i class="fa-solid fa-circle-check text-green-400 mr-2"></i> 텔레그램 프리미엄 알림 서비스</li>
-            </ul>
+    <section id="saas-tab" class="tab-content p-4 text-center">
+        <div class="premium-gradient p-10 rounded-[40px] shadow-2xl mb-6">
+            <h2 class="text-3xl font-black mb-2">PRO VERSION</h2>
+            <p class="text-white/70 text-sm mb-8">No Limits. Real-time API. <br>Exclusive Surebet Signals.</p>
+            <button class="w-full bg-white text-indigo-600 font-black py-4 rounded-2xl shadow-xl active:scale-95 transition-transform">UPGRADE NOW</button>
         </div>
         <div class="version-tag">v7.1 TON Golden Master [Statistics]</div>
     </section>
@@ -113,91 +98,86 @@
         <div class="nav-item" onclick="switchTab('calc', this)"><i class="fa-solid fa-calculator text-xl mb-1"></i><span>계산기</span></div>
         <div class="nav-item"><i class="fa-solid fa-earth-asia text-xl mb-1"></i><span>북메이커</span></div>
         <div class="nav-item"><i class="fa-solid fa-clock-rotate-left text-xl mb-1"></i><span>기록</span></div>
-        <div class="nav-item" onclick="switchTab('saas', this)"><i class="fa-solid fa-crown text-xl mb-1"></i><span>SaaS</span></div>
+        <div class="nav-item" onclick="switchTab('saas', this)"><i class="fa-solid fa-gem text-xl mb-1"></i><span>멤버십</span></div>
     </nav>
 
     <script>
-        // [1] State & Preservation (Golden Master Standard)
+        // [1] State & Preservation
         const state = {
-            balance: parseFloat(localStorage.getItem('balance')) || 5000.00,
+            balance: parseFloat(localStorage.getItem('balance')) || 5720.50,
             currentOdds: { a: 0, b: 0, team: '' }
         };
 
-        // [2] API Data Fetching (with REAL Logos)
+        // [2] API Data Fetching (v9.0 Hybrid + Fixed Logos)
         async function fetchMatches() {
             const container = document.getElementById('api-match-container');
             
-            // 시뮬레이션 데이터에 실제 로고 URL 매칭
+            // 안정적인 구글 파비콘 서비스를 이용해 로고를 가져옵니다.
             const mockApiData = [
-                { id: 1, sport: '⚽', country: '영국', league: 'EPL', time: '22:00', home: '맨유', away: '리버풀', oddsA: 2.15, oddsB: 2.08, roi: 4.2, 
-                  bookA: 'Pinnacle', linkA: 'https://pinnacle.com', imgA: 'https://upload.wikimedia.org/wikipedia/commons/2/23/Pinnacle_Logo.svg',
-                  bookB: 'Bet365', linkB: 'https://bet365.com', imgB: 'https://upload.wikimedia.org/wikipedia/commons/2/20/Bet365_Logo.svg' },
-                { id: 2, sport: '🏀', country: '미국', league: 'NBA', time: '10:30', home: 'LAL', away: 'GSW', oddsA: 1.95, oddsB: 2.30, roi: 5.6,
-                  bookA: '1xBet', linkA: 'https://1xbet.com', imgA: 'https://upload.wikimedia.org/wikipedia/commons/e/ed/1xbet_logo.png',
-                  bookB: 'Pinnacle', linkB: 'https://pinnacle.com', imgB: 'https://upload.wikimedia.org/wikipedia/commons/2/23/Pinnacle_Logo.svg' }
+                { id: 1, sport: '⚽', country: '영국', league: 'EPL', time: '21:30', home: '아스널', away: '첼시', oddsA: 2.12, oddsB: 2.05, roi: 4.1, 
+                  bookA: 'Pinnacle', domainA: 'pinnacle.com', bookB: 'Bet365', domainB: 'bet365.com' },
+                { id: 2, sport: '🏀', country: '미국', league: 'NBA', time: '11:00', home: 'LAL', away: 'GSW', oddsA: 1.98, oddsB: 2.25, roi: 5.3,
+                  bookA: '1xBet', domainA: '1xbet.com', bookB: 'Pinnacle', domainB: 'pinnacle.com' },
+                { id: 3, sport: '⚽', country: '스페인', league: 'LaLiga', time: '04:00', home: '레알 마드리드', away: '바르샤', oddsA: 2.05, oddsB: 2.10, roi: 3.8,
+                  bookA: 'Betway', domainA: 'betway.com', bookB: 'Bwin', domainB: 'bwin.com' }
             ];
 
-            // 로딩 시뮬레이션 (UX)
-            container.innerHTML = `<div class="text-center text-xs text-slate-600 py-10">fetching live data...</div>`;
-
-            setTimeout(() => {
-                container.innerHTML = '';
-                mockApiData.forEach(m => {
-                    const card = document.createElement('div');
-                    card.className = 'glass rounded-3xl overflow-hidden shadow-lg';
-                    card.innerHTML = `
-                        <div class="p-3 bg-white/5 flex justify-between items-center text-[10px] font-bold text-slate-400 border-b border-white/5">
-                            <span>${m.sport} ${m.country} - ${m.league}</span>
-                            <span>LIVE ${m.time}</span>
+            container.innerHTML = '';
+            mockApiData.forEach(m => {
+                const card = document.createElement('div');
+                card.className = 'glass rounded-3xl overflow-hidden shadow-xl';
+                card.innerHTML = `
+                    <div class="p-3 bg-white/5 flex justify-between items-center text-[10px] font-black text-slate-500 border-b border-white/5 uppercase">
+                        <span>${m.sport} ${m.country} - ${m.league}</span>
+                        <span>${m.time}</span>
+                    </div>
+                    <div class="p-4 text-center">
+                        <div class="text-lg font-black tracking-tight">${m.home} vs ${m.away}</div>
+                        <div class="text-xs text-indigo-400 font-mono mt-1 font-bold">${m.oddsA} / ${m.oddsB}</div>
+                    </div>
+                    
+                    <div class="flex items-stretch divide-x divide-white/5 border-t border-b border-white/5">
+                        <a href="https://${m.domainA}" target="_blank" class="flex-1 logo-btn">
+                            <img src="https://www.google.com/s2/favicons?sz=64&domain=${m.domainA}" class="logo-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/25/25694.png'">
+                            <span class="logo-text">${m.bookA}</span>
+                        </a>
+                        <a href="https://${m.domainB}" target="_blank" class="flex-1 logo-btn">
+                            <img src="https://www.google.com/s2/favicons?sz=64&domain=${m.domainB}" class="logo-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/25/25694.png'">
+                            <span class="logo-text">${m.bookB}</span>
+                        </a>
+                    </div>
+                    
+                    <div class="p-3 flex justify-between items-center bg-black/20">
+                        <div class="pl-2">
+                            <div class="text-[9px] text-slate-500 font-bold uppercase">Expected ROI</div>
+                            <div class="text-green-400 font-black text-xl tracking-tighter">+${m.roi}%</div>
                         </div>
-                        <div class="p-4 text-center">
-                            <div class="text-xs text-slate-500">Match</div>
-                            <div class="text-lg font-black tracking-tight">${m.home} vs ${m.away}</div>
-                            <div class="text-xs text-indigo-400 font-mono mt-1">${m.oddsA} / ${m.oddsB}</div>
-                        </div>
-                        
-                        <div class="flex items-stretch h-24 divide-x divide-white/5 border-t border-b border-white/5 bg-black/20">
-                            <a href="${m.linkA}" target="_blank" class="flex-1 logo-btn">
-                                <img src="${m.imgA}" alt="${m.bookA}">
-                            </a>
-                            <a href="${m.linkB}" target="_blank" class="flex-1 logo-btn">
-                                <img src="${m.imgB}" alt="${m.bookB}">
-                            </a>
-                        </div>
-                        
-                        <div class="p-3 flex justify-between items-center bg-slate-900/50">
-                            <div class="flex items-baseline gap-1">
-                                <div class="text-xs text-green-500 font-bold">ROI</div>
-                                <div class="text-green-400 font-black text-xl">+${m.roi}%</div>
-                            </div>
-                            <button onclick="prepareCalc('${m.home} vs ${m.away}', ${m.oddsA}, ${m.oddsB})" class="bg-indigo-600 w-12 h-12 rounded-2xl shadow-lg shadow-indigo-500/30 active:scale-95 transition-transform flex items-center justify-center">
-                                <i class="fa-solid fa-calculator text-lg"></i>
-                            </button>
-                        </div>
-                    `;
-                    container.appendChild(card);
-                });
-            }, 800); // 약간의 지연으로 API 호출 느낌 전달
+                        <button onclick="prepareCalc('${m.home} vs ${m.away}', ${m.oddsA}, ${m.oddsB})" class="bg-indigo-600 w-12 h-12 rounded-2xl shadow-lg shadow-indigo-500/40 active:scale-90 transition-transform flex items-center justify-center">
+                            <i class="fa-solid fa-calculator text-lg"></i>
+                        </button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
         }
 
-        // [3] Calculator Logic
+        // [3] Calculator Logic (Deterministic)
         function prepareCalc(name, a, b) {
             state.currentOdds = { a, b, team: name };
             document.getElementById('calc-match-name').innerText = name;
             document.getElementById('calc-match-odds').innerText = `Odds: ${a} vs ${b}`;
-            // 자동으로 계산기 탭으로 이동 (UX)
             switchTab('calc', document.querySelectorAll('.nav-item')[1]);
+            document.getElementById('seed-input').focus();
         }
 
         function calculateSurebet() {
             const seed = parseFloat(document.getElementById('seed-input').value) || 0;
             const resDiv = document.getElementById('calc-results');
             
-            if (seed <= 0) { resDiv.classList.add('opacity-30'); return; }
-            resDiv.classList.remove('opacity-30');
+            if (seed <= 0) { resDiv.style.opacity = "0.2"; return; }
+            resDiv.style.opacity = "1";
 
             const { a, b } = state.currentOdds;
-            // 양방 분배 공식
             const stakeA = (b / (a + b)) * seed;
             const stakeB = (a / (a + b)) * seed;
             const win = stakeA * a;
@@ -209,7 +189,7 @@
             document.getElementById('res-profit').innerText = Math.floor(profit).toLocaleString() + "원";
         }
 
-        // [4] General UI Control
+        // [4] Navigation & Global Control
         function switchTab(tabId, el) {
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -218,10 +198,9 @@
             window.scrollTo(0,0);
         }
 
-        // Initialize
         window.onload = () => {
-            document.getElementById('top-balance').innerText = state.balance.toFixed(2) + " TON";
-            fetchMatches(); // 앱 시작 시 데이터 가져오기
+            document.getElementById('top-balance').innerText = state.balance.toLocaleString() + " TON";
+            fetchMatches();
         };
     </script>
 </body>
