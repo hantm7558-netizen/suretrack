@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>SureTrack v9.3 Golden Master</title>
+<title>SureTrack v9.4 Golden Master</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <style>
@@ -22,7 +22,7 @@ body { font-family: 'Inter', sans-serif; background-color: #020617; color: white
 .initial-badge { width: 34px; height: 34px; background: #1e293b; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; color: #475569; text-transform: uppercase; }
 .logo-img { position: absolute; top: 0; left: 0; width: 34px; height: 34px; border-radius: 8px; object-fit: contain; z-index: 10; opacity: 0; transition: opacity 0.3s; }
 .center-logo-box { display: flex; justify-content: center; align-items: center; gap: 16px; padding: 14px; background: rgba(0,0,0,0.2); }
-.bookie-card { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); border: 1px solid rgba(255,255,255,0.03); cursor: pointer; }
+.bookie-card { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); border: 1px solid rgba(255,255,255,0.03); cursor: pointer; display: flex; align-items: center; text-decoration: none; color: inherit; }
 .bookie-card:hover { transform: translateY(-3px); background: rgba(255,255,255,0.08); border-color: rgba(99, 102, 241, 0.4); }
 .bottom-nav { position: fixed; bottom: 0; width: 100%; height: 85px; background: #0f172a; border-top: 1px solid #1e293b; display: flex; justify-content: space-around; align-items: center; z-index: 1000; }
 .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; font-size: 10px; color: #64748b; cursor: pointer; text-transform: uppercase; font-weight: 700; }
@@ -30,7 +30,6 @@ body { font-family: 'Inter', sans-serif; background-color: #020617; color: white
 .version-tag { font-size: 10px; color: #475569; font-weight: bold; text-align: center; padding: 25px; letter-spacing: 1.5px; opacity: 0.5; }
 .calc-mode-btn { flex: 1; padding: 12px; font-size: 11px; font-weight: 900; border-radius: 12px; background: rgba(255,255,255,0.05); color: #64748b; transition: all 0.2s; }
 .calc-mode-btn.active { background: #4f46e5; color: white; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4); }
-/* v9.3 Logo Badge Style */
 .direct-logo { width: 18px; height: 18px; border-radius: 4px; margin-top: 4px; border: 1px solid rgba(255,255,255,0.1); }
 </style>
 </head>
@@ -50,7 +49,7 @@ body { font-family: 'Inter', sans-serif; background-color: #020617; color: white
 <button onclick="fetchMatches()" class="text-indigo-400 text-[10px] font-black uppercase">Refresh Feed</button>
 </div>
 <div id="api-match-container" class="space-y-4"></div>
-<div class="version-tag">v9.3 TON Golden Master</div>
+<div class="version-tag">v9.4 TON Golden Master</div>
 </main>
 
 <section id="calc-tab" class="tab-content p-4">
@@ -81,7 +80,7 @@ body { font-family: 'Inter', sans-serif; background-color: #020617; color: white
 </div>
 </div>
 </div>
-<div class="version-tag">v9.3 TON Golden Master</div>
+<div class="version-tag">v9.4 TON Golden Master</div>
 </section>
 
 <section id="bookies-tab" class="tab-content p-4">
@@ -93,7 +92,7 @@ body { font-family: 'Inter', sans-serif; background-color: #020617; color: white
 </div>
 </div>
 <div id="partner-list" class="space-y-2.5"></div>
-<div class="version-tag">v9.3 TON Golden Master</div>
+<div class="version-tag">v9.4 TON Golden Master</div>
 </section>
 
 <section id="history-tab" class="tab-content p-4">
@@ -103,7 +102,7 @@ body { font-family: 'Inter', sans-serif; background-color: #020617; color: white
 <div class="glass p-4 rounded-2xl text-center"><div class="text-[8px] font-black text-slate-500 uppercase">Total Bets</div><div id="total-bets-val" class="text-white font-black text-sm">0</div></div>
 </div>
 <div id="history-list" class="space-y-3"></div>
-<div class="version-tag">v9.3 TON Golden Master</div>
+<div class="version-tag">v9.4 TON Golden Master</div>
 </section>
 
 <section id="saas-tab" class="tab-content p-4">
@@ -113,7 +112,7 @@ body { font-family: 'Inter', sans-serif; background-color: #020617; color: white
 <div class="premium-gradient p-7 rounded-[32px] shadow-2xl relative overflow-hidden"><h3 class="text-lg font-black text-white uppercase italic mb-4">Pro Elite</h3><ul class="space-y-2 text-[10px] text-white/90 font-bold uppercase italic border-b border-white/10 pb-4 mb-4"><li>• ROI Limit: Unlimited</li><li>• Speed: Real-time Live</li></ul><div class="text-2xl font-black italic">19.9 TON / MO</div><i class="fa-solid fa-bolt absolute -bottom-4 -right-2 text-white/10 text-8xl"></i></div>
 <div class="elite-gradient p-7 rounded-[32px] shadow-2xl relative overflow-hidden"><h3 class="text-xl font-black text-white uppercase italic mb-4">Elite Master</h3><ul class="space-y-2 text-[10px] text-white/95 font-bold uppercase italic border-b border-white/10 pb-4 mb-4"><li>• ROI: Max + Picks</li><li>• Alerts: 0.1s Priority</li></ul><div class="text-2xl font-black italic">49.9 TON / MO</div><i class="fa-solid fa-crown absolute -bottom-4 -right-2 text-white/10 text-8xl"></i></div>
 </div>
-<div class="version-tag">v9.3 TON Golden Master</div>
+<div class="version-tag">v9.4 TON Golden Master</div>
 </section>
 
 <nav class="bottom-nav">
@@ -183,9 +182,9 @@ card.innerHTML = `
     </div>
 </div>
 <div class="center-logo-box border-t border-b border-white/5">
-    <div class="flex items-center gap-2 group"><div class="logo-container"><div class="initial-badge">A</div><img src="https://icon.horse/icon/${domainA}" class="logo-img" onload="this.style.opacity=1"></div><span class="text-[10px] font-bold text-slate-400 italic">${m['북A']}</span></div>
+    <a href="https://${domainA}" target="_blank" class="flex items-center gap-2 group"><div class="logo-container"><div class="initial-badge">A</div><img src="https://icon.horse/icon/${domainA}" class="logo-img" onload="this.style.opacity=1"></div><span class="text-[10px] font-bold text-slate-400 italic group-hover:text-indigo-400 transition-colors">${m['북A']}</span></a>
     <div class="text-slate-700 text-[9px] font-black italic">VS</div>
-    <div class="flex items-center gap-2 group"><div class="logo-container"><div class="initial-badge">B</div><img src="https://icon.horse/icon/${domainB}" class="logo-img" onload="this.style.opacity=1"></div><span class="text-[10px] font-bold text-slate-400 italic">${m['북B']}</span></div>
+    <a href="https://${domainB}" target="_blank" class="flex items-center gap-2 group"><div class="logo-container"><div class="initial-badge">B</div><img src="https://icon.horse/icon/${domainB}" class="logo-img" onload="this.style.opacity=1"></div><span class="text-[10px] font-bold text-slate-400 italic group-hover:text-indigo-400 transition-colors">${m['북B']}</span></a>
 </div>
 <div class="p-4 flex justify-between items-center bg-slate-900/50">
     <div><div class="text-[8px] text-slate-600 font-black uppercase tracking-widest">EXPECTED ROI</div><div class="text-green-400 font-black text-2xl tracking-tighter italic">+${m['수익률(%)']}%</div></div>
@@ -198,8 +197,25 @@ container.appendChild(card);
 
 function loadBookies() {
 const list = document.getElementById('partner-list');
-const partners = [{n:'Pinnacle',d:'pinnacle.com',t:'VIP'},{n:'Bet365',d:'bet365.com',t:'CORE'},{n:'Stake',d:'stake.com',t:'CRYPTO'},{n:'1xBet',d:'1xbet.com',t:'ODDS'},{n:'Betway',d:'betway.com',t:'GLOBAL'},{n:'Bwin',d:'bwin.com',t:'LIVE'},{n:'Unibet',d:'unibet.com',t:'PRO'},{n:'Betfair',d:'betfair.com',t:'EXCH'},{n:'William Hill',d:'williamhill.com',t:'UK'},{n:'Marathonbet',d:'marathonbet.com',t:'VAL'},{n:'Parimatch',d:'parimatch.com',t:'FAST'},{n:'LeoVegas',d:'leovegas.com',t:'MOBILE'},{n:'22Bet',d:'22bet.com',t:'WIDE'},{n:'BetVictor',d:'betvictor.com',t:'SHARP'},{n:'Dafabet',d:'dafabet.com',t:'ASIA'},{n:'Cloudbet',d:'cloudbet.com',t:'BTC'},{n:'Mr Green',d:'mrgreen.com',t:'PREM'},{n:'888Sport',d:'888sport.com',t:'DYN'},{n:'Ladbrokes',d:'ladbrokes.com',t:'UK'},{n:'Coral',d:'coral.co.uk',t:'EST'}];
-list.innerHTML = partners.map(p => `<div class="glass p-4 rounded-2xl flex items-center gap-5 bookie-card active:bg-white/5 transition-all"><div class="logo-container"><div class="initial-badge">${p.n[0]}</div><img src="https://icon.horse/icon/${p.d}" class="logo-img" onload="this.style.opacity=1"></div><div class="flex-1 text-left"><div class="flex justify-between items-center"><h4 class="font-black text-[14px] italic uppercase tracking-tighter">${p.n}</h4><span class="text-[8px] border border-white/20 px-2 py-0.5 rounded text-slate-500 font-black">${p.t}</span></div><p class="text-[9px] text-slate-600 italic font-bold uppercase tracking-tight">Verified B2B Channel</p></div></div>`).join('');
+// 정확한 공식 도메인 검증 및 적용
+const partners = [
+    {n:'Pinnacle',d:'pinnacle.com',t:'VIP'},{n:'Bet365',d:'bet365.com',t:'CORE'},{n:'Stake',d:'stake.com',t:'CRYPTO'},
+    {n:'1xBet',d:'1xbet.com',t:'ODDS'},{n:'Betway',d:'betway.com',t:'GLOBAL'},{n:'Bwin',d:'bwin.com',t:'LIVE'},
+    {n:'Unibet',d:'unibet.com',t:'PRO'},{n:'Betfair',d:'betfair.com',t:'EXCH'},{n:'William Hill',d:'williamhill.com',t:'UK'},
+    {n:'Marathonbet',d:'marathonbet.com',t:'VAL'},{n:'Parimatch',d:'parimatch.com',t:'FAST'},{n:'LeoVegas',d:'leovegas.com',t:'MOBILE'},
+    {n:'22Bet',d:'22bet.com',t:'WIDE'},{n:'BetVictor',d:'betvictor.com',t:'SHARP'},{n:'Dafabet',d:'dafabet.com',t:'ASIA'},
+    {n:'Cloudbet',d:'cloudbet.com',t:'BTC'},{n:'Mr Green',d:'mrgreen.com',t:'PREM'},{n:'888Sport',d:'888sport.com',t:'DYN'},
+    {n:'Ladbrokes',d:'ladbrokes.com',t:'UK'},{n:'Coral',d:'coral.co.uk',t:'EST'}
+];
+list.innerHTML = partners.map(p => `
+<a href="https://${p.d}" target="_blank" class="glass p-4 rounded-2xl bookie-card active:bg-white/5 transition-all">
+    <div class="logo-container"><div class="initial-badge">${p.n[0]}</div><img src="https://icon.horse/icon/${p.d}" class="logo-img" onload="this.style.opacity=1"></div>
+    <div class="flex-1 text-left ml-5">
+        <div class="flex justify-between items-center"><h4 class="font-black text-[14px] italic uppercase tracking-tighter">${p.n}</h4><span class="text-[8px] border border-white/20 px-2 py-0.5 rounded text-slate-500 font-black">${p.t}</span></div>
+        <p class="text-[9px] text-slate-600 italic font-bold uppercase tracking-tight">Access Secure Gateway</p>
+    </div>
+    <i class="fa-solid fa-chevron-right text-slate-700 text-[10px]"></i>
+</a>`).join('');
 }
 
 function setCalcMode(m) { state.calcMode = m; document.getElementById('mode-2way').classList.toggle('active', m===2); document.getElementById('mode-3way').classList.toggle('active', m===3); document.getElementById('odds-c').classList.toggle('hidden', m===2); document.getElementById('res-c-box').classList.toggle('hidden', m===2); runCalculation(); }
