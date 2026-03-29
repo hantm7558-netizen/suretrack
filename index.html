@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>SureTrack v9.6 Golden Master</title>
+<title>SureTrack v9.7 Golden Master</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap');
-body { font-family: 'Inter', sans-serif; background-color: #020617; color: white; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
+body { font-family: 'Inter', sans-serif; background-color: #020617; color: white; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; overflow-x: hidden; }
 .tab-content { display: none; padding-bottom: 120px; min-height: 100vh; }
 .tab-content.active { display: block; animation: fadeIn 0.3s ease; }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -30,6 +30,11 @@ body { font-family: 'Inter', sans-serif; background-color: #020617; color: white
 .version-tag { font-size: 10px; color: #475569; font-weight: bold; text-align: center; padding: 25px; letter-spacing: 1.5px; opacity: 0.5; }
 .calc-mode-btn { flex: 1; padding: 12px; font-size: 11px; font-weight: 900; border-radius: 12px; background: rgba(255,255,255,0.05); color: #64748b; transition: all 0.2s; }
 .calc-mode-btn.active { background: #4f46e5; color: white; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4); }
+/* v9.7 Deposit Modal Style */
+#deposit-modal { display: none; position: fixed; inset: 0; background: rgba(2, 6, 23, 0.95); z-index: 2000; align-items: center; justify-content: center; padding: 20px; }
+.deposit-card { width: 100%; max-width: 360px; background: #0f172a; border: 1px solid rgba(99, 102, 241, 0.2); border-radius: 32px; padding: 24px; position: relative; }
+.copy-field { background: #020617; border: 1px solid #1e293b; padding: 12px 16px; border-radius: 14px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+/* v9.5 Auto-Bot Toggle Style */
 .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
 .switch input { opacity: 0; width: 0; height: 0; }
 .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #334155; transition: .4s; border-radius: 24px; }
@@ -39,6 +44,36 @@ input:checked + .slider:before { transform: translateX(20px); }
 </style>
 </head>
 <body>
+
+<div id="deposit-modal">
+    <div class="deposit-card text-center">
+        <button onclick="closeDeposit()" class="absolute top-6 right-6 text-slate-500"><i class="fa-solid fa-xmark text-xl"></i></button>
+        <h2 class="text-xl font-black italic text-white uppercase tracking-tighter mb-2">Refill TON</h2>
+        <p class="text-[10px] text-slate-500 font-bold uppercase mb-6 tracking-widest">Send TON to the address below</p>
+        
+        <div class="text-left mb-6">
+            <label class="text-[9px] font-black text-indigo-400 uppercase tracking-widest ml-1 mb-1.5 block">Wallet Address</label>
+            <div class="copy-field">
+                <span class="text-[11px] font-mono text-slate-300 truncate mr-4">UQAs7...E9x2j</span>
+                <button onclick="copyText('UQAs7_SureTrack_Official_Wallet_Placeholder')" class="text-indigo-400 text-xs"><i class="fa-regular fa-copy"></i></button>
+            </div>
+            
+            <label class="text-[9px] font-black text-amber-500 uppercase tracking-widest ml-1 mb-1.5 block">Required Comment (Memo)</label>
+            <div class="copy-field border-amber-500/30">
+                <span id="user-memo" class="text-lg font-black text-white italic tracking-widest">778899</span>
+                <button onclick="copyText(document.getElementById('user-memo').innerText)" class="text-amber-500 text-xs"><i class="fa-regular fa-copy"></i></button>
+            </div>
+        </div>
+        
+        <div class="bg-indigo-500/10 p-4 rounded-2xl mb-6">
+            <p class="text-[10px] text-indigo-300 font-bold leading-relaxed">
+                <i class="fa-solid fa-circle-exclamation mr-1"></i> YOU MUST INCLUDE THE COMMENT <br>TO AUTOMATICALLY REFILL YOUR BALANCE.
+            </p>
+        </div>
+        
+        <button onclick="closeDeposit()" class="w-full bg-white text-slate-900 font-black py-4 rounded-2xl uppercase italic text-xs shadow-xl active:scale-95 transition-transform">I have sent TON</button>
+    </div>
+</div>
 
 <header class="p-4 flex justify-between items-center glass sticky top-0 z-50">
 <div class="flex items-center gap-3">
@@ -65,7 +100,7 @@ input:checked + .slider:before { transform: translateX(20px); }
 <button onclick="fetchMatches()" class="text-indigo-400 text-[10px] font-black uppercase">Refresh Feed</button>
 </div>
 <div id="api-match-container" class="space-y-4"></div>
-<div class="version-tag">v9.6 TON Golden Master</div>
+<div class="version-tag">v9.7 TON Golden Master</div>
 </main>
 
 <section id="calc-tab" class="tab-content p-4">
@@ -96,7 +131,7 @@ input:checked + .slider:before { transform: translateX(20px); }
 </div>
 </div>
 </div>
-<div class="version-tag">v9.6 TON Golden Master</div>
+<div class="version-tag">v9.7 TON Golden Master</div>
 </section>
 
 <section id="bookies-tab" class="tab-content p-4">
@@ -108,7 +143,7 @@ input:checked + .slider:before { transform: translateX(20px); }
 </div>
 </div>
 <div id="partner-list" class="space-y-2.5"></div>
-<div class="version-tag">v9.6 TON Golden Master</div>
+<div class="version-tag">v9.7 TON Golden Master</div>
 </section>
 
 <section id="history-tab" class="tab-content p-4">
@@ -118,7 +153,7 @@ input:checked + .slider:before { transform: translateX(20px); }
 <div class="glass p-4 rounded-2xl text-center"><div class="text-[8px] font-black text-slate-500 uppercase">Total Bets</div><div id="total-bets-val" class="text-white font-black text-sm">0</div></div>
 </div>
 <div id="history-list" class="space-y-3"></div>
-<div class="version-tag">v9.6 TON Golden Master</div>
+<div class="version-tag">v9.7 TON Golden Master</div>
 </section>
 
 <section id="saas-tab" class="tab-content p-4">
@@ -128,7 +163,7 @@ input:checked + .slider:before { transform: translateX(20px); }
 <div class="premium-gradient p-7 rounded-[32px] shadow-2xl relative overflow-hidden" onclick="subscribePlan('PRO')"><h3 class="text-lg font-black text-white uppercase italic mb-4">Pro Elite</h3><ul class="space-y-2 text-[10px] text-white/90 font-bold uppercase italic border-b border-white/10 pb-4 mb-4"><li>• Bet Limit: 100 TON</li><li>• Speed: Real-time (2nd Priority)</li></ul><div class="text-2xl font-black italic">19.9 TON / MO</div><i class="fa-solid fa-bolt absolute -bottom-4 -right-2 text-white/10 text-8xl"></i></div>
 <div class="elite-gradient p-7 rounded-[32px] shadow-2xl relative overflow-hidden ring-4 ring-indigo-500/30" onclick="subscribePlan('ELITE')"><h3 class="text-xl font-black text-white uppercase italic mb-4">Elite Master</h3><ul class="space-y-2 text-[10px] text-white/95 font-bold uppercase italic border-b border-white/10 pb-4 mb-4"><li>• Bet Limit: UNLIMITED</li><li>• Speed: 0.1s (1st Priority)</li></ul><div class="text-2xl font-black italic">49.9 TON / MO</div><i class="fa-solid fa-crown absolute -bottom-4 -right-2 text-white/10 text-8xl"></i></div>
 </div>
-<div class="version-tag">v9.6 TON Golden Master</div>
+<div class="version-tag">v9.7 TON Golden Master</div>
 </section>
 
 <nav class="bottom-nav">
@@ -140,13 +175,26 @@ input:checked + .slider:before { transform: translateX(20px); }
 </nav>
 
 <script>
-const state = { balance: 5720.50, isAutoBot: false, isSubscribed: false, currentTier: 'FREE', calcMode: 2, currentMatch: "", lastCalc: null, history: JSON.parse(localStorage.getItem('suretrack_history')) || [], currentBookA: "", currentBookB: "" };
+const state = { balance: 5720.50, isAutoBot: false, isSubscribed: false, currentTier: 'FREE', userMemo: '778899', calcMode: 2, currentMatch: "", lastCalc: null, history: JSON.parse(localStorage.getItem('suretrack_history')) || [], currentBookA: "", currentBookB: "" };
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbx6yjWtdnE06qGtnW95xAtQnSyCgjYIBGBzm6n9e945tUeYPeULg71Tp_5CEImbYBAO/exec';
+
+// v9.7 Rollsgame-Style Deposit Functions
+function depositFund() { 
+    document.getElementById('deposit-modal').style.display = 'flex';
+}
+function closeDeposit() { 
+    document.getElementById('deposit-modal').style.display = 'none';
+}
+function copyText(text) {
+    navigator.clipboard.writeText(text).then(() => {
+        alert("Copied: " + text);
+    });
+}
 
 function toggleBot() { 
     const toggle = document.getElementById('bot-toggle');
     if(toggle.checked && !state.isSubscribed) {
-        alert("ACCESS DENIED: Membership required for Auto-Execution.");
+        alert("ACCESS DENIED: Active Membership Required.");
         toggle.checked = false;
         switchTab('saas', document.querySelectorAll('.nav-item')[4]);
         return;
@@ -163,21 +211,16 @@ function subscribePlan(plan) {
     state.isSubscribed = true;
     state.currentTier = plan;
     updateBalance();
-    alert(`Welcome to ${plan} MASTER! Auto-Bot is now available.`);
+    alert(`Success! Auto-Bot is now unlocked for ${plan} status.`);
     switchTab('home', document.querySelectorAll('.nav-item')[0]);
-}
-
-function depositFund() { 
-    const amt = prompt("Enter TON amount to deposit:"); 
-    if(amt && !isNaN(amt)) { state.balance += parseFloat(amt); updateBalance(); alert("Deposit Confirmed!"); } 
 }
 
 function updateBalance() { document.getElementById('top-balance').innerText = state.balance.toLocaleString(undefined, {minimumFractionDigits: 2}) + " TON"; }
 
-// 🏆 baseball_mlb Men 🇺🇸 -> ⚾ baseball_mlb Men 🇺🇸 (수정 적용)
+// v9.6 Sport Emoji Optimized (Trophy Removed)
 function getMatchIdentity(lRaw, sRaw) {
 const s = (sRaw || "").toLowerCase(); const l = (lRaw || "").toLowerCase();
-let sEmoji = "🏆"; 
+let sEmoji = "🏁"; 
 if(s.includes("soccer")) sEmoji = "⚽"; 
 else if(s.includes("basketball")) sEmoji = "🏀"; 
 else if(s.includes("baseball")) sEmoji = "⚾"; 
@@ -196,7 +239,7 @@ try { const date = new Date(isoString); return date.toLocaleString('ko-KR', { ti
 
 async function fetchMatches() {
 const container = document.getElementById('api-match-container');
-container.innerHTML = `<div class="text-center py-20 text-[10px] font-black animate-pulse uppercase">Syncing Real-time Tunnels...</div>`;
+container.innerHTML = `<div class="text-center py-20 text-[10px] font-black animate-pulse uppercase">Syncing Arbitrage Tunnels...</div>`;
 try {
 const res = await fetch(GAS_URL); const data = await res.json(); container.innerHTML = '';
 data.forEach(m => {
@@ -213,7 +256,7 @@ card.innerHTML = `
     <div class="text-lg font-black tracking-tighter text-white italic">${m['경기명']}</div>
     <div class="text-[10px] font-black text-indigo-400 mb-3">${kTime}</div>
     <div class="text-[9px] font-black text-slate-600 uppercase tracking-[0.3em] mb-1.5">${m['마켓타입']||'1X2'}</div>
-    <div class="text-xl text-white font-mono font-black italic tracking-[0.1em] bg-black/30 py-4 rounded-xl border border-white/5 flex justify-around items-end">
+    <div class="text-xl text-white font-mono font-black italic tracking-[0.1em] bg-black/30 py-5 rounded-xl border border-white/5 flex justify-around items-end">
         <div class="flex flex-col items-center">
             <span class="text-xs text-slate-500 font-bold mb-1 tracking-tighter">WIN</span>
             <span>${m['배당A']}</span>
