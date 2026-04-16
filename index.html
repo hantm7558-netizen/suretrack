@@ -21,22 +21,24 @@ body { font-family: 'Inter', sans-serif; background-color: #020617; color: white
 .premium-gradient { background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); }
 .elite-gradient { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
 
+/* 고정 하단 메뉴 (Golden Master Standard) */
 .bottom-nav { position: fixed; bottom: 0; width: 100%; height: 85px; background: #0f172a; border-top: 1px solid #1e293b; display: flex; justify-content: space-around; align-items: center; z-index: 6000; transition: transform 0.2s ease-in-out; }
 body.keyboard-open .bottom-nav { transform: translateY(100%); display: none !important; }
-.nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; font-size: 10px; color: #64748b; cursor: pointer; text-transform: uppercase; font-weight: 700; }
+.nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; font-size: 10px; color: #64748b; cursor: pointer; text-transform: uppercase; font-weight: 700; transition: color 0.3s; }
 .nav-item.active { color: #818cf8; }
 
-.match-card { background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(255,255,255,0.05); border-radius: 24px; overflow: hidden; margin-bottom: 16px; }
-.odds-column { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 10px 0; background: rgba(0,0,0,0.2); border-radius: 12px; border: 1px solid rgba(255,255,255,0.03); }
-.direct-logo { width: 14px; height: 14px; border-radius: 3px; margin-top: 4px; }
-
-/* iOS 스위치 디자인 */
+/* iOS 토글 스위치 */
 .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
 .switch input { opacity: 0; width: 0; height: 0; }
 .slider { position: absolute; cursor: pointer; inset: 0; background-color: #334155; transition: .4s; border-radius: 34px; }
 .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
 input:checked + .slider { background-color: #4f46e5; }
 input:checked + .slider:before { transform: translateX(20px); }
+
+/* 매치 카드 & UI */
+.match-card { background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(255,255,255,0.05); border-radius: 24px; overflow: hidden; margin-bottom: 16px; }
+.odds-column { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 10px 0; background: rgba(0,0,0,0.2); border-radius: 12px; border: 1px solid rgba(255,255,255,0.03); }
+.direct-logo { width: 14px; height: 14px; border-radius: 3px; margin-top: 4px; }
 
 #profile-overlay, #trans-overlay { display: none; position: fixed; inset: 0; background: #020617; z-index: 8500; overflow-y: auto; padding-bottom: 120px; }
 .safety-input { background: #020617; border: 1px solid #1e293b; border-radius: 12px; padding: 10px; color: white; font-weight: 800; width: 85px; text-align: center; outline: none; }
@@ -57,20 +59,20 @@ input:checked + .slider:before { transform: translateX(20px); }
 <main id="home-tab" class="tab-content active p-4">
     <div class="glass p-5 rounded-[28px] mb-6 flex justify-between items-center shadow-xl">
         <div class="text-left">
-            <h3 class="text-xs font-black text-slate-400 italic uppercase">Auto-Execution Engine</h3>
+            <h3 class="text-xs font-black text-slate-400 uppercase italic">Auto-Execution Engine</h3>
             <p id="bot-sub" class="text-[9px] text-slate-500 font-bold uppercase mt-1">Stand-by mode</p>
         </div>
         <label class="switch"><input type="checkbox" onchange="toggleBot(this)"><span class="slider"></span></label>
     </div>
     <div id="api-match-container" class="space-y-4"></div>
-    <div class="text-center opacity-30 text-[8px] font-black py-10 tracking-[0.3em]">v11.6 GOLDEN MASTER</div>
+    <div class="text-center opacity-30 text-[8px] font-black py-10 tracking-[0.3em]">v11.6 TON GOLDEN MASTER</div>
 </main>
 
 <section id="calc-tab" class="tab-content p-4">
     <div class="glass rounded-[32px] p-6 shadow-2xl">
         <div class="flex gap-2 mb-6 bg-slate-900/50 p-1.5 rounded-2xl">
-            <button id="mode-2way" onclick="setCalcMode(2)" class="calc-mode-btn active">2-Way (O/U)</button>
-            <button id="mode-3way" onclick="setCalcMode(3)" class="calc-mode-btn">3-Way (1X2)</button>
+            <button id="mode-2way" onclick="setCalcMode(2)" class="p-3 flex-1 rounded-xl font-black bg-indigo-600 text-white active">2-Way</button>
+            <button id="mode-3way" onclick="setCalcMode(3)" class="p-3 flex-1 rounded-xl font-black bg-slate-800 text-slate-500">3-Way</button>
         </div>
         <div class="space-y-4">
             <div class="bg-black/30 p-5 rounded-2xl border border-white/5">
@@ -91,7 +93,7 @@ input:checked + .slider:before { transform: translateX(20px); }
                     <div class="text-right border-l border-white/10 pl-4"><span class="text-[8px] text-slate-500 block uppercase font-black">Stake C</span><span id="res-c" class="font-black text-white text-lg">0</span></div>
                 </div>
             </div>
-            <div id="calc-results" class="mt-8 opacity-20 transition-opacity">
+            <div id="calc-results" class="mt-8 opacity-20">
                 <div class="premium-gradient p-6 rounded-3xl shadow-xl">
                     <div class="flex justify-between items-center mb-1"><span class="text-[10px] font-black uppercase opacity-60 italic">Expected ROI</span><span id="res-roi" class="text-xl font-black">0.00%</span></div>
                     <div class="flex justify-between items-end"><span class="text-[10px] font-black uppercase opacity-60 italic">Net Profit</span><span id="res-profit" class="text-3xl font-black italic">0</span></div>
@@ -107,7 +109,7 @@ input:checked + .slider:before { transform: translateX(20px); }
     <div class="grid grid-cols-3 gap-2.5 mb-6 text-center">
         <div class="glass p-4 rounded-2xl"><div class="text-[8px] font-black text-slate-500 uppercase">Weekly Profit</div><div class="text-green-400 font-black text-sm">1,420.50</div></div>
         <div class="glass p-4 rounded-2xl"><div class="text-[8px] font-black text-slate-500 uppercase">Avg ROI</div><div class="text-indigo-400 font-black text-sm">5.25%</div></div>
-        <div class="glass p-4 rounded-2xl"><div class="text-[8px] font-black text-slate-500 uppercase">Total Settled</div><div class="text-white font-black text-sm">20</div></div>
+        <div class="glass p-4 rounded-2xl"><div class="text-[8px] font-black text-slate-500 uppercase">Settled</div><div class="text-white font-black text-sm">20</div></div>
     </div>
     <div id="history-list" class="space-y-3 pb-20"></div>
 </section>
@@ -124,7 +126,6 @@ input:checked + .slider:before { transform: translateX(20px); }
 <div id="profile-overlay">
     <div class="p-6">
         <header class="flex justify-between items-center mb-10"><h2 class="neon-logo italic tracking-tighter">SYSTEM SETTINGS</h2><button onclick="closeProfile()" class="text-slate-500"><i class="fa-solid fa-xmark text-2xl"></i></button></header>
-        
         <div class="mb-10">
             <h4 class="text-xs font-black text-indigo-400 uppercase italic border-l-4 border-indigo-500 pl-3 mb-4">Language Select</h4>
             <div class="glass rounded-2xl overflow-hidden" id="lang-accordion">
@@ -137,9 +138,8 @@ input:checked + .slider:before { transform: translateX(20px); }
                 <div class="lang-item" onclick="setLanguage('ja')"><span>日本語</span></div>
             </div>
         </div>
-
-        <div id="profile-safety-view" class="space-y-4">
-            <h4 class="text-xs font-black text-amber-500 uppercase italic border-l-4 border-amber-500 pl-3 mb-6">Safety Guard Engine</h4>
+        <div class="space-y-4">
+            <h4 class="text-xs font-black text-amber-500 uppercase italic border-l-4 border-amber-500 pl-3 mb-6">Safety Engine</h4>
             <div class="glass p-5 rounded-2xl flex justify-between items-center"><div><div class="text-sm font-bold italic">Slippage Limit</div><p class="text-[9px] text-slate-500 font-bold uppercase">Auto-stop on odds drop</p></div><input type="number" id="safety-slippage" class="safety-input" value="0.05"></div>
             <div class="glass p-5 rounded-2xl flex justify-between items-center"><div><div class="text-sm font-bold italic">Max Seed Limit</div><p class="text-[9px] text-slate-500 font-bold uppercase">Limit per Single Game</p></div><input type="number" id="safety-bet-limit" class="safety-input" value="100"></div>
             <button onclick="saveSafetyComplete()" class="w-full py-4 bg-indigo-600 rounded-xl font-black text-white uppercase mt-6 shadow-xl">Save & Fix Configuration</button>
@@ -162,7 +162,6 @@ const state = {
 };
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbx6yjWtdnE06qGtnW95xAtQnSyCgjYIBGBzm6n9e945tUeYPeULg71Tp_5CEImbYBAO/exec';
 
-// 트랜잭션 오버레이 제어
 function openTransactions() { document.getElementById('trans-overlay').style.display = 'block'; renderTransactions(); }
 function closeTransactions() { document.getElementById('trans-overlay').style.display = 'none'; }
 function openProfile() { document.getElementById('profile-overlay').style.display = 'block'; }
@@ -285,8 +284,6 @@ function renderHistory() {
     }));
     list.innerHTML = mocks.map(h => {
         const isS = h.success === 'SUCCESS';
-        const payout = isS ? (h.stake * h.odds).toFixed(2) : '0.00';
-        const roi = isS ? ((h.odds - 1) * 100).toFixed(2) : '-100.00';
         return `
             <div class="glass p-4 rounded-2xl border-l-4 ${isS?'border-green-500':'border-red-500'}">
                 <div class="flex justify-between items-start mb-2">
@@ -296,8 +293,8 @@ function renderHistory() {
                 <div class="grid grid-cols-4 gap-2 border-t border-white/5 pt-3 text-center">
                     <div><p class="text-[7px] text-slate-500 font-black">ODDS</p><p class="text-[11px] font-black">${h.odds}</p></div>
                     <div><p class="text-[7px] text-slate-500 font-black">STAKE</p><p class="text-[11px] font-black">${h.stake}</p></div>
-                    <div><p class="text-[7px] text-slate-500 font-black">PAYOUT</p><p class="text-[11px] font-black ${isS?'text-green-400':''}">${payout}</p></div>
-                    <div><p class="text-[7px] text-slate-500 font-black">ROI</p><p class="text-[11px] font-black ${isS?'text-indigo-400':'text-red-400'}">${roi}%</p></div>
+                    <div><p class="text-[7px] text-slate-500 font-black">PAYOUT</p><p class="text-[11px] font-black ${isS?'text-green-400':''}">${isS?(h.stake*h.odds).toFixed(2):'0.00'}</p></div>
+                    <div><p class="text-[7px] text-slate-500 font-black">ROI</p><p class="text-[11px] font-black ${isS?'text-indigo-400':'text-red-400'}">${isS?((h.odds-1)*100).toFixed(2):'-100.00'}%</p></div>
                 </div>
             </div>`;
     }).join('');
@@ -321,6 +318,16 @@ window.addEventListener('resize', () => {
     if (window.innerHeight < 550) document.body.classList.add('keyboard-open');
     else document.body.classList.remove('keyboard-open');
 });
+
+function syncTelegramProfile() {
+    try {
+        const tg = window.Telegram.WebApp;
+        const user = tg.initDataUnsafe?.user;
+        if(user && user.photo_url) {
+            document.getElementById('header-avatar').src = user.photo_url;
+        }
+    } catch(e) {}
+}
 
 window.onload = () => { fetchMatches(); syncTelegramProfile(); };
 </script>
